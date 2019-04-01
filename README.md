@@ -1,0 +1,2 @@
+# QtWhiteSpaceManager
+Qt Project
