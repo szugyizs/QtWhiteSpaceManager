@@ -57,7 +57,7 @@ void DatabaseWindow::on_connectDbBtn_clicked()
 
     QSqlQueryModel *model = new QSqlQueryModel();
     model->setQuery(dbase.setupModel());
-    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setModel(model);
 
     emit connEstablished(true);

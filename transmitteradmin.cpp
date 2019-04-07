@@ -227,9 +227,17 @@ void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
 
 void TransmitterAdmin::on_tabWidget_currentChanged(int index)
 {
-    //set placeholder item?
+    //set placeholder item in dropdown?
+
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
-    model->setQuery(connection.getIDs());
-    ui->tmitDropDown->setModel(model);
+    if(index==1){
+        model->setQuery(connection.getIDs());
+        ui->tmitDropDown->setModel(model);
+    }
+    if(index==2){
+        model->setQuery(connection.setupModel());
+        ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->ListTableView->setModel(model);
+    }
 }
