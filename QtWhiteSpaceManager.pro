@@ -30,23 +30,23 @@ SOURCES += \
     main.cpp \
     transmitter.cpp \
     user.cpp \
-    userdialog.cpp \
     databasewindow.cpp \
-    transmitteradmin.cpp
+    transmitteradmin.cpp \
+    useradmin.cpp
 
 HEADERS += \
     database.h \
     device.h \
     transmitter.h \
     user.h \
-    userdialog.h \
     databasewindow.h \
-    transmitteradmin.h
+    transmitteradmin.h \
+    useradmin.h
 
 FORMS += \
-    userdialog.ui \
     databasewindow.ui \
-    transmitteradmin.ui
+    transmitteradmin.ui \
+    useradmin.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

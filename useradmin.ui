@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserDialog</class>
- <widget class="QDialog" name="UserDialog">
+ <class>UserAdmin</class>
+ <widget class="QDialog" name="UserAdmin">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
-    <height>529</height>
+    <width>545</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,23 +16,23 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>6</y>
+     <x>10</x>
+     <y>10</y>
      <width>531</width>
      <height>511</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tabWidget_2">
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="CreateTab">
+      <widget class="QWidget" name="CreateTab_2">
        <attribute name="title">
         <string>Create</string>
        </attribute>
-       <widget class="QToolBox" name="toolBox">
+       <widget class="QToolBox" name="toolBox_2">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -44,19 +44,19 @@
         <property name="currentIndex">
          <number>1</number>
         </property>
-        <widget class="QWidget" name="readFromFile">
+        <widget class="QWidget" name="readFromFile_2">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>501</width>
-           <height>349</height>
+           <width>100</width>
+           <height>30</height>
           </rect>
          </property>
          <attribute name="label">
           <string>Read values from file</string>
          </attribute>
-         <widget class="QWidget" name="verticalLayoutWidget_2">
+         <widget class="QWidget" name="verticalLayoutWidget_5">
           <property name="geometry">
            <rect>
             <x>4</x>
@@ -65,21 +65,11 @@
             <height>321</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout">
+            <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
-              <widget class="QLabel" name="fileLabel">
-               <property name="text">
-                <string>File name</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="fileNameEdit"/>
-             </item>
-             <item>
-              <widget class="QPushButton" name="browseFile">
+              <widget class="QPushButton" name="browseFile_2">
                <property name="text">
                 <string>Browse</string>
                </property>
@@ -88,19 +78,19 @@
             </layout>
            </item>
            <item>
-            <widget class="QTableWidget" name="tableWidget"/>
+            <widget class="QTableWidget" name="tableWidget_2"/>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
-              <widget class="QPushButton" name="addAllBtn">
+              <widget class="QPushButton" name="addAllBtn_2">
                <property name="text">
                 <string>Add users</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="clearFileBtn">
+              <widget class="QPushButton" name="clearFileBtn_2">
                <property name="text">
                 <string>Clear values</string>
                </property>
@@ -111,7 +101,7 @@
           </layout>
          </widget>
         </widget>
-        <widget class="QWidget" name="readFromManual">
+        <widget class="QWidget" name="readFromManual_2">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -123,7 +113,7 @@
          <attribute name="label">
           <string>Enter values manually</string>
          </attribute>
-         <widget class="QWidget" name="verticalLayoutWidget_3">
+         <widget class="QWidget" name="verticalLayoutWidget_6">
           <property name="geometry">
            <rect>
             <x>1</x>
@@ -132,74 +122,74 @@
             <height>341</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
+          <layout class="QVBoxLayout" name="verticalLayout_8">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,6">
+            <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="4,6">
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="label_10">
                <property name="text">
                 <string>Power</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="powerInput"/>
+              <widget class="QLineEdit" name="powerInput_2"/>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,6">
+            <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="4,6">
              <item>
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="label_11">
                <property name="text">
                 <string>Radius</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="radiusInput"/>
+              <widget class="QLineEdit" name="radiusInput_2"/>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="4,6">
+            <layout class="QHBoxLayout" name="horizontalLayout_18" stretch="4,6">
              <item>
-              <widget class="QLabel" name="label_3">
+              <widget class="QLabel" name="label_12">
                <property name="text">
                 <string>X Coordinate</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="xInput"/>
+              <widget class="QLineEdit" name="xInput_2"/>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="4,6">
+            <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="4,6">
              <item>
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="label_13">
                <property name="text">
                 <string>Y Coordinate</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="yInput"/>
+              <widget class="QLineEdit" name="yInput_2"/>
              </item>
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <layout class="QHBoxLayout" name="horizontalLayout_20">
              <item>
-              <widget class="QPushButton" name="addBtnManual">
+              <widget class="QPushButton" name="addBtnManual_2">
                <property name="text">
                 <string>Add user</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="clearBtnCreate">
+              <widget class="QPushButton" name="clearBtnCreate_2">
                <property name="text">
                 <string>Clear values</string>
                </property>
@@ -212,11 +202,11 @@
         </widget>
        </widget>
       </widget>
-      <widget class="QWidget" name="ModifyTab">
+      <widget class="QWidget" name="ModifyTab_2">
        <attribute name="title">
         <string>Modify</string>
        </attribute>
-       <widget class="Line" name="line">
+       <widget class="Line" name="line_2">
         <property name="geometry">
          <rect>
           <x>17</x>
@@ -229,7 +219,7 @@
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
-       <widget class="QWidget" name="horizontalLayoutWidget">
+       <widget class="QWidget" name="horizontalLayoutWidget_2">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -238,16 +228,16 @@
           <height>80</height>
          </rect>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QHBoxLayout" name="horizontalLayout_21">
          <item>
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="label_14">
            <property name="text">
             <string>Choose a user to edit:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="tmitDropDown">
+          <widget class="QComboBox" name="userDropDown">
            <property name="currentText">
             <string/>
            </property>
@@ -255,7 +245,7 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="verticalLayoutWidget_4">
+       <widget class="QWidget" name="verticalLayoutWidget_7">
         <property name="geometry">
          <rect>
           <x>20</x>
@@ -264,67 +254,67 @@
           <height>341</height>
          </rect>
         </property>
-        <layout class="QVBoxLayout" name="modifyLayout">
+        <layout class="QVBoxLayout" name="modifyLayout_2">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="4,6">
+          <layout class="QHBoxLayout" name="horizontalLayout_22" stretch="4,6">
            <item>
-            <widget class="QLabel" name="label_6">
+            <widget class="QLabel" name="label_15">
              <property name="text">
               <string>Power</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="powerInputModify"/>
+            <widget class="QLineEdit" name="powerInputModify_2"/>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="4,6">
+          <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="4,6">
            <item>
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="label_16">
              <property name="text">
               <string>Radius</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="radiusInputModify"/>
+            <widget class="QLineEdit" name="radiusInputModify_2"/>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="4,6">
+          <layout class="QHBoxLayout" name="horizontalLayout_24" stretch="4,6">
            <item>
-            <widget class="QLabel" name="label_8">
+            <widget class="QLabel" name="label_17">
              <property name="text">
               <string>X Coordinate</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="xInputModify"/>
+            <widget class="QLineEdit" name="xInputModify_2"/>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="4,6">
+          <layout class="QHBoxLayout" name="horizontalLayout_25" stretch="4,6">
            <item>
-            <widget class="QLabel" name="label_9">
+            <widget class="QLabel" name="label_18">
              <property name="text">
               <string>Y Coordinate</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="yInputModify"/>
+            <widget class="QLineEdit" name="yInputModify_2"/>
            </item>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <layout class="QHBoxLayout" name="horizontalLayout_26">
            <item>
-            <widget class="QPushButton" name="ModifyBtn">
+            <widget class="QPushButton" name="ModifyBtn_2">
              <property name="text">
               <string>Apply user changes</string>
              </property>
@@ -335,11 +325,11 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="ListTab">
+      <widget class="QWidget" name="ListTab_2">
        <attribute name="title">
         <string>List</string>
        </attribute>
-       <widget class="QTableView" name="ListTableView">
+       <widget class="QTableView" name="uListView">
         <property name="geometry">
          <rect>
           <x>5</x>
@@ -353,7 +343,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QDialogButtonBox" name="ListButtonBox">
+     <widget class="QDialogButtonBox" name="ListButtonBox_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>

@@ -153,6 +153,13 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="importBtn">
+         <property name="text">
+          <string>Import to file</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
     </layout>

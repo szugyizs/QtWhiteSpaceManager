@@ -49,10 +49,10 @@ QSqlError Database::addItem(QString type, double power, int radius, float x, flo
     else{ return queryAdd.lastError(); }
 }
 
-QSqlError Database::addModifiedItem(QString ID, QString power, QString x, QString y){
+QSqlError Database::addModifiedItem(QString ID, QString power, QString radius, QString x, QString y){
     QSqlQuery queryAdd;
     //do the xy pair exist? if not, proceed, otherwise return msg
-    queryAdd.prepare("UPDATE `whitespacetable` SET Power = '"+power+"',X = '"+x+"',Y = '"+y+"' WHERE ID = '"+ID+"'");
+    queryAdd.prepare("UPDATE `whitespacetable` SET Power = '"+power+"',Radius = '"+radius+"',X = '"+x+"',Y = '"+y+"' WHERE ID = '"+ID+"'");
     if(queryAdd.exec()){ return QSqlError(); }
     else{ return queryAdd.lastError(); }
 }
@@ -83,9 +83,9 @@ QString Database::createID(QString type){
     return type;
 }
 
-QSqlQuery Database::getIDs(){
+QSqlQuery Database::getIDs(QString type){
     QSqlQuery *query = new QSqlQuery(db);
-    query->prepare("select ID from whitespacetable");
+    query->prepare("select ID from whitespacetable where ID LIKE '"+type+"%'");
     query->exec();
     return *query;
 }
@@ -94,6 +94,13 @@ QSqlQuery Database::getIDs(){
 QSqlQuery Database::getRow(QString ID){
     QSqlQuery *query = new QSqlQuery(db);
     query->prepare("select * from whitespacetable where ID='"+ID+"'");
+    query->exec();
+    return *query;
+}
+
+QSqlQuery Database::getAllOfType(QString type){
+    QSqlQuery *query = new QSqlQuery(db);
+    query->prepare("select * from whitespacetable where ID LIKE '"+type+"%'");
     query->exec();
     return *query;
 }

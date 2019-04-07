@@ -91,3 +91,8 @@ void DatabaseWindow::on_refreshBtn_clicked()
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setModel(model);
 }
+
+void DatabaseWindow::on_importBtn_clicked()
+{
+
+}

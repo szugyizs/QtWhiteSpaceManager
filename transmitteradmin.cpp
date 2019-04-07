@@ -152,7 +152,7 @@ void TransmitterAdmin::on_addAllBtn_clicked()
                 cout << "Invalid item" << endl;
             }
         }
-//      Transmitter *transmitter = new Transmitter( xin.last().toDouble(), yin.at(j).toInt(), pin.at(j).toInt()); //?? fix TODO
+        //      Transmitter *transmitter = new Transmitter( xin.last().toDouble(), yin.at(j).toInt(), pin.at(j).toInt()); //?? fix TODO
     }
 
     for(int i = 0; i<pin.length(); i++){
@@ -193,8 +193,9 @@ void TransmitterAdmin::on_ModifyBtn_clicked()
     QString pin = ui->powerInputModify->text();
     QString xin = ui->xInputModify->text();
     QString yin = ui->yInputModify->text();
+    QString rin = "6";
 
-    QSqlError cerror = connection.addModifiedItem(id, pin, xin, yin);
+    QSqlError cerror = connection.addModifiedItem(id, pin, rin, xin, yin);
     if (cerror.type() != QSqlError::NoError) {
         QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror.text()+" ");
     }
@@ -228,15 +229,15 @@ void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
 void TransmitterAdmin::on_tabWidget_currentChanged(int index)
 {
     //set placeholder item in dropdown?
-
+    //only get transmitter devices
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
-        model->setQuery(connection.getIDs());
+        model->setQuery(connection.getIDs("T"));
         ui->tmitDropDown->setModel(model);
     }
     if(index==2){
-        model->setQuery(connection.setupModel());
+        model->setQuery(connection.getAllOfType("T"));
         ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView->setModel(model);
     }
