@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,14 +25,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp
+    database.cpp \
+    device.cpp \
+    main.cpp \
+    transmitter.cpp \
+    user.cpp \
+    userdialog.cpp \
+    databasewindow.cpp \
+    transmitteradmin.cpp
 
 HEADERS += \
-        mainwindow.h
+    database.h \
+    device.h \
+    transmitter.h \
+    user.h \
+    userdialog.h \
+    databasewindow.h \
+    transmitteradmin.h
 
 FORMS += \
-        mainwindow.ui
+    userdialog.ui \
+    databasewindow.ui \
+    transmitteradmin.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

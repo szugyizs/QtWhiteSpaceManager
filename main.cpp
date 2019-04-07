@@ -1,19 +1,25 @@
 #include <QApplication>
-#include "starter.h"
-#include "transmitterdialog.h"
-#include "databasedialog.h"
+#include "transmitteradmin.h"
+#include "databasewindow.h"
 #include "userdialog.h"
+#include "QDesktopWidget.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //    Starter sysStart;
-    //    sysStart.show();
-    TransmitterDialog transmitterdialog;
-    DatabaseDialog databasedialog;
-    UserDialog userdialog;
-    databasedialog.show();
-    transmitterdialog.show();
-    userdialog.show();
+    DatabaseWindow dw;
+    TransmitterAdmin ta;
+//    UserAdmin ua;
+//    MapWindow mw;
+
+    dw.setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignTop, dw.size(), a.desktop()->availableGeometry()));
+    ta.setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignBottom, ta.size(), a.desktop()->availableGeometry()));
+//    ua->setGeometry(QStyle::alignedRect(Qt::RightToLeft, Qt::AlignTop, ua.size(), a->desktop()->availableGeometry()));
+//    mw->setGeometry(QStyle::alignedRect(Qt::RightToLeft, Qt::AlignBottom, dialog.size(), a->desktop()->availableGeometry()));
+
+    dw.show();
+    ta.show();
     return a.exec();
 }
+
+

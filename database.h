@@ -1,36 +1,27 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include <list>
-#include "device.h"
-#include "ui_databasedialog.h"
-#include <QUuid>
-#include <QHash>
-#include <QFile>
+#include <QtSql>
+#include <QSqlDatabase>
+#include <QMessageBox>
 
-class Database
-{
+class Database : public  QSqlDatabase {
 public:
     Database();
-    //Database();
     ~Database();
-//    Database(QFile in, QFile out); //TODO do we need this
-//    Database(QFile out);    //TODO do we need this
 
-    void addDevice(Device d, char t);
-    Device getDevice(QString id);
-    void removeDevice(QString id);
+    QSqlError setupConnection(QString host, QString dbname, QString uname, int port, QString pw, QWidget *window);
+    void closeConnection(QWidget *window);
+    QSqlQuery setupModel();
+    QSqlError addItem(QString type, double power, int radius, float x, float y);
+    QSqlError addModifiedItem(QString ID, QString power, QString x, QString y);
+    QString createID(QString type);
+    QSqlError addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y);
+    QSqlQuery getIDs();
+    QSqlQuery getRow(QString ID);
 
-    void modifyDevice(QString id, Device d);
-
-    //check against distances
-    //  check against power <-where do these funct go
-    //TODO
 private:
-    QHash<QString, Device> deviceList_;
-    QUuid uuid;
-//    QFile inFile;    //TODO do we need this
-//    QFile outFile;    //TODO do we need this
+    QSqlDatabase db;
 };
 
 #endif // DATABASE_H

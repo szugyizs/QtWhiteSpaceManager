@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-User::User() {};
+User::User() { cout << "User object created." << endl;};
 User::User(int rad, int x, int y, QString ID, double pow) : Device (rad, x, y, ID, pow)
 {
     radius_ = rad;

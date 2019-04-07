@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TransmitterDialog</class>
- <widget class="QDialog" name="TransmitterDialog">
+ <class>TransmitterAdmin</class>
+ <widget class="QDialog" name="TransmitterAdmin">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -69,16 +69,6 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
-              <widget class="QLabel" name="fileLabel">
-               <property name="text">
-                <string>File name</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="fileNameEdit"/>
-             </item>
-             <item>
               <widget class="QPushButton" name="browseFile">
                <property name="text">
                 <string>Browse</string>
@@ -88,7 +78,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QTableWidget" name="tableWidget"/>
+            <widget class="QTableWidget" name="fileTableWidget"/>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -144,20 +134,6 @@
              </item>
              <item>
               <widget class="QLineEdit" name="powerInput"/>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="4,6">
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Radius</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="radiusInput"/>
              </item>
             </layout>
            </item>
@@ -276,20 +252,6 @@
            </item>
            <item>
             <widget class="QLineEdit" name="powerInputModify"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="4,6">
-           <item>
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>Radius</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="radiusInputModify"/>
            </item>
           </layout>
          </item>

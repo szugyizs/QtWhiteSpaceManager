@@ -1,23 +1,25 @@
-#ifndef TRANSMITTERDIALOG_H
-#define TRANSMITTERDIALOG_H
+#ifndef TRANSMITTERADMIN_H
+#define TRANSMITTERADMIN_H
 
 #include <QDialog>
 #include <QFileDialog>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include "transmitter.h"
+#include "databasewindow.h"
 
 namespace Ui {
-class TransmitterDialog;
+class TransmitterAdmin;
 }
 
-class TransmitterDialog : public QDialog
+class TransmitterAdmin : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit TransmitterDialog(QWidget *parent = nullptr);
-    ~TransmitterDialog();
+    explicit TransmitterAdmin(QWidget *parent = nullptr);
+    ~TransmitterAdmin();
 
 private slots:
     void on_addBtnManual_clicked();
@@ -25,8 +27,6 @@ private slots:
     void on_clearBtnCreate_clicked();
 
     void on_browseFile_clicked();
-
-    void on_fileNameEdit_returnPressed();
 
     void on_addAllBtn_clicked();
 
@@ -36,10 +36,12 @@ private slots:
 
     void on_ModifyBtn_clicked();
 
-    void on_tmitDropDown_currentIndexChanged(int index);
+    void on_tabWidget_currentChanged(int index);
+
+    void on_tmitDropDown_currentIndexChanged(const QString &arg1);
 
 private:
-    Ui::TransmitterDialog *ui;
+    Ui::TransmitterAdmin *ui;
     QString ID_;
     int radius_;
     double power_;
@@ -65,4 +67,4 @@ public:
     explicit ListTab(QWidget *parent = nullptr);
 };
 
-#endif // TRANSMITTERDIALOG_H
+#endif // TRANSMITTERADMIN_H

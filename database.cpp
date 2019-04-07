@@ -1,50 +1,99 @@
-#include <iostream>
-using namespace std;
 #include "database.h"
-#include "databasedialog.h"
-#include "ui_databasedialog.h"
+using namespace std;
+#include <iostream>
+#include <cmath>
 
-//-----------------Constructors-----------------
-//Database::Database() {}
-Database::Database() {
-    QHash<QString, Device> deviceList_;
-    QHash<QString, Device> userList_;
-    QHash<QString, Device> transmitterList_;
-
-    QUuid uuid;
-//    DatabaseDialog()
-//    ui->tableWidget->setRowCount(0);
-//    ui->tableWidget->setColumnCount(5);
-}
+Database::Database(){cout<<"Database object created."<<endl;}
 Database::~Database() { cout << "Database object removed." << endl; }
+QSqlDatabase db;
 
-//-----------------List mgmt functions-----------------
-void Database::addDevice(Device d, char t){
-    QString id;
-    if (d.getID()==nullptr||d.getID()==""){
-    if (t=='U'){id = "U";}
-    else if (t=='T'){id = "T";}
-    else { return; }
-    id.append(uuid.createUuid().toString()); //do we need a UUID at all
-    d.setID(id);
+QSqlError Database::setupConnection(QString host, QString dbname, QString uname, int port, QString pw, QWidget *window){
+    db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName(host);
+    db.setDatabaseName(dbname);
+    db.setUserName(uname);
+    db.setPort(port);
+    db.setPassword(pw);
+    if(!db.open()){
+        return db.lastError();
     }
-    else {id=d.getID();}
-    deviceList_.insert(id,d);
-//    int i = ui->tableWidget->getRowCount();
+    else {
+        return QSqlError();
+    }
+}
 
-//    ui->tableWidget->setItem(i,j,new QTableWidgetItem(data[i][j]));
+void Database::closeConnection(QWidget *window){
+    db.close();
+    db.removeDatabase(QSqlDatabase::defaultConnection);
+    QMessageBox::warning(window,"Connection closed","Database connection closed");
+}
+
+QSqlQuery Database::setupModel(){
+    QSqlQuery *query = new QSqlQuery(db);
+    query->prepare("select * from whitespacetable");
+    query->exec();
+    return *query;
+}
+
+QSqlError Database::addItem(QString type, double power, int radius, float x, float y){
+    QString ID = createID(type);
+    QSqlQuery queryAdd;
+    //does the id exist? if not, do the xy pair exist? if not, proceed, otherwise return msg
+    queryAdd.prepare("INSERT INTO `whitespacetable` (`ID`, `Power`, `Radius`, `X`, `Y`) VALUES (?, ?, ?, ?, ?)");
+    queryAdd.addBindValue(ID);
+    queryAdd.addBindValue(power);
+    queryAdd.addBindValue(radius);
+    queryAdd.addBindValue(x);
+    queryAdd.addBindValue(y);
+    if(queryAdd.exec()){ return QSqlError(); }
+    else{ return queryAdd.lastError(); }
+}
+
+QSqlError Database::addModifiedItem(QString ID, QString power, QString x, QString y){
+    QSqlQuery queryAdd;
+    //do the xy pair exist? if not, proceed, otherwise return msg
+    queryAdd.prepare("UPDATE `whitespacetable` SET Power = '"+power+"',X = '"+x+"',Y = '"+y+"' WHERE ID = '"+ID+"'");
+    if(queryAdd.exec()){ return QSqlError(); }
+    else{ return queryAdd.lastError(); }
+}
+
+QSqlError Database::addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y){
+    QStringList ID;
+    for (int i = 0; i<power.length(); i++){ ID.push_back(createID(type)); }
+    QSqlQuery queryBulk;
+    //does the id exist? if not, do the xy pair exist? if not, proceed, otherwise return msg
+    queryBulk.prepare("INSERT INTO whitespacetable VALUES (?, ?, ?, ?, ?)");
+    queryBulk.addBindValue(ID);
+    queryBulk.addBindValue(power);
+    queryBulk.addBindValue(radius);
+    queryBulk.addBindValue(x);
+    queryBulk.addBindValue(y);
+    if(queryBulk.execBatch()){ return QSqlError(); }
+    else{ return queryBulk.lastError(); }
 
 }
 
-Device Database::getDevice(QString id){
-    return deviceList_.value(id);
+QString Database::createID(QString type){
+    //does id exist
+    //ensure temp only numerical
+    int temp = QRandomGenerator::global()->generate();
+    temp = abs(temp);
+    cout<<temp<<endl;
+    type.append(QString::number(temp));
+    return type;
 }
 
-void Database::removeDevice(QString id){
-    deviceList_.remove(id);
+QSqlQuery Database::getIDs(){
+    QSqlQuery *query = new QSqlQuery(db);
+    query->prepare("select ID from whitespacetable");
+    query->exec();
+    return *query;
 }
 
-//-----------------Access functions-----------------
-//licence check funct from user in here
-//location/distance check
-//power check
+
+QSqlQuery Database::getRow(QString ID){
+    QSqlQuery *query = new QSqlQuery(db);
+    query->prepare("select * from whitespacetable where ID='"+ID+"'");
+    query->exec();
+    return *query;
+}
