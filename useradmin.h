@@ -26,19 +26,19 @@ private slots:
 
     void on_clearBtnCreate_2_clicked();
 
-    void on_browseFile_2_clicked();
-
-    void on_addAllBtn_2_clicked();
-
-    void on_toolBox_2_currentChanged(int index);
-
-    void on_clearFileBtn_2_clicked();
-
     void on_ModifyBtn_2_clicked();
 
     void on_tabWidget_2_currentChanged(int index);
 
     void on_userDropDown_currentIndexChanged(const QString &arg1);
+
+    void on_uExportBtn_clicked();
+
+    void on_removeBtn_clicked();
+
+    void on_clrSelectBtn_clicked();
+
+    void on_helpBtn_clicked();
 
 private:
     Ui::UserAdmin *ui;
@@ -59,6 +59,12 @@ class ModifyTab_2 : public QWidget{
     Q_OBJECT
 public:
     explicit ModifyTab_2(QWidget *parent = nullptr);
+};
+
+class RemoveTab_2 : public QWidget{
+    Q_OBJECT
+public:
+    explicit RemoveTab_2(QWidget *parent = nullptr);
 };
 
 class ListTab_2 : public QWidget{

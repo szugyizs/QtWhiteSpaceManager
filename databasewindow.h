@@ -20,13 +20,13 @@ public:
     ~DatabaseWindow();
 
 signals:
-    void connEstablished(bool isit);
+    void connEstablished(bool value);
 
 private slots:
     void on_connectDbBtn_clicked();
     void on_closeDbBtn_clicked();
     void on_refreshBtn_clicked();
-    void on_importBtn_clicked();
+    void on_helpBtn_clicked();
 
 private:
     Ui::DatabaseWindow *ui;

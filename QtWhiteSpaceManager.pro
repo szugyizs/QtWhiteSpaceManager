@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql quickwidgets location network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +32,11 @@ SOURCES += \
     user.cpp \
     databasewindow.cpp \
     transmitteradmin.cpp \
-    useradmin.cpp
+    useradmin.cpp \
+    helpdialog.cpp
+RESOURCES += \
+    mapper.qrc
+OTHER_FILES +=
 
 HEADERS += \
     database.h \
@@ -41,14 +45,21 @@ HEADERS += \
     user.h \
     databasewindow.h \
     transmitteradmin.h \
-    useradmin.h
+    useradmin.h \
+    tvwsmodel.h \
+    tvwspoint.h \
+    helpdialog.h
 
 FORMS += \
     databasewindow.ui \
     transmitteradmin.ui \
-    useradmin.ui
+    useradmin.ui \
+    helpdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    hhh.qml

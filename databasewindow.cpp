@@ -1,5 +1,6 @@
 #include "databasewindow.h"
 #include "ui_databasewindow.h"
+#include "helpdialog.h"
 #include <QtSql>
 #include <iostream>
 using namespace std;
@@ -11,8 +12,9 @@ DatabaseWindow::DatabaseWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->closeDbBtn->setDisabled(true);
     ui->refreshBtn->setDisabled(true);
+    setWindowTitle("White space database for frequency band 600MHz");
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
 
-    //set all windows to close when this closes
     //for convenience:
     ui->unameLineEdit->setText("root");
     ui->pwLineEdit->setText("root");
@@ -64,6 +66,8 @@ void DatabaseWindow::on_connectDbBtn_clicked()
 }
 
 void DatabaseWindow::on_closeDbBtn_clicked(){
+    ui->tableView->setModel(nullptr);
+
     dbase.closeConnection(this);
     ui->statusLbl->setText("Connection closed");
 
@@ -92,7 +96,12 @@ void DatabaseWindow::on_refreshBtn_clicked()
     ui->tableView->setModel(model);
 }
 
-void DatabaseWindow::on_importBtn_clicked()
-{
 
+void DatabaseWindow::on_helpBtn_clicked()
+{
+    QString helpText = "Write this, Aidan, I'm running out of insults.";
+    HelpDialog helpPopUp;
+    helpPopUp.setHelpText(helpText);
+    helpPopUp.setModal(true);
+    helpPopUp.exec();
 }

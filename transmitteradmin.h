@@ -40,6 +40,14 @@ private slots:
 
     void on_tmitDropDown_currentIndexChanged(const QString &arg1);
 
+    void on_tExportBtn_clicked();
+
+    void on_removeBtn_clicked();
+
+    void on_clrSelectBtn_clicked();
+
+    void on_helpBtn_clicked();
+
 private:
     Ui::TransmitterAdmin *ui;
     QString ID_;
@@ -59,6 +67,12 @@ class ModifyTab : public QWidget{
     Q_OBJECT
 public:
     explicit ModifyTab(QWidget *parent = nullptr);
+};
+
+class RemoveTab : public QWidget{
+    Q_OBJECT
+public:
+    explicit RemoveTab(QWidget *parent = nullptr);
 };
 
 class ListTab : public QWidget{

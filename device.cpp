@@ -1,6 +1,5 @@
 #include "device.h"
 #include <iostream>
-#include <cmath>
 using namespace std;
 
 Device::Device() { cout << "Device object created." << endl; }
@@ -27,7 +26,7 @@ Device::Device(int x, int y, double pow)
     radius_ = tR_;
     x_ = x;
     y_ = y;
-    power_ = pow;
+    power_ = tP_;
     cout << "Device object created." << endl;
 }
 
@@ -47,11 +46,3 @@ void Device::setRadius(int rad) { radius_ = rad; }
 void Device::setX(int x) { x_ = x; }
 void Device::setY(int y) { y_ = y; }
 
-double distance(double x1, double y1, double x2, double y2){
-    double dist;
-    double delx, dely;
-    delx = abs(x2 - x1);
-    dely = abs(y2 - y1);
-    dist = sqrt(pow(delx,2) + pow(dely,2));
-    return dist;
-}

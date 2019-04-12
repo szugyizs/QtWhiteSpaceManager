@@ -1,7 +1,9 @@
 #include "useradmin.h"
 #include "ui_useradmin.h"
+#include "helpdialog.h"
 using namespace std;
 #include <iostream>
+#include <QCheckBox>
 
 UserAdmin::UserAdmin(QWidget *parent) :
     QDialog(parent),
@@ -9,13 +11,7 @@ UserAdmin::UserAdmin(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("User Admin");
-    //    ui->ListTableWidget->setRowCount(0);
-    //    ui->ListTableWidget->setColumnCount(5);
-    //    ui->ListTableWidget->setHorizontalHeaderLabels(QStringList() << "ID" << "Power" << "Radius" << "X Coord" << "Y Coord");
-    //set buttons to disabled until db is initialised
-    //    ui->addAllBtn->setDisabled(true);
-    //    ui->addBtnManual->setDisabled(true);
-    //connect(connection, SIGNAL(connEstablished(bool)), this, SLOT(enableButtons(bool)));
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     cout << "User dialog object created." << endl;
 }
 
@@ -29,160 +25,43 @@ QList<QStringList> columns_2;
 
 CreateTab_2::CreateTab_2(QWidget *parent) : QWidget(parent) { }
 ModifyTab_2::ModifyTab_2(QWidget *parent) : QWidget(parent) { }
-ListTab_2::ListTab_2(QWidget *parent) : QWidget(parent) {}
+ListTab_2::ListTab_2(QWidget *parent) : QWidget(parent) { }
+RemoveTab_2::RemoveTab_2(QWidget *parent) : QWidget(parent) { }
 
 //-------------------Create Tab----------------------
 void UserAdmin::on_addBtnManual_2_clicked()
 {
-    //return descriptive error when tried to click/add without db conn
     int xin = ui->xInput_2->text().toInt();
     int yin = ui->yInput_2->text().toInt();
-    double pin = ui->powerInput_2->text().toDouble();
-    int rin = ui->radiusInput_2->text().toInt();
-    User *user = new User(rin, xin, yin, pin);
-
-    //handle User going to same location as user but later
+    int rin = ui->radiusInput->text().toInt();
+    //User *user = new User(rin, xin, yin);
 
     Database connection;
+//    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
 
-    QSqlError cerror = connection.addItem("U", pin, rin, xin, yin);
-    if (cerror.type() != QSqlError::NoError) {
-        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.text()+" ");
-    }
-    else{
-        QMessageBox::information(this,"Record added","Successfully added to the database");
-        ui->powerInput_2->setText("");
-        ui->xInput_2->setText("");
-        ui->yInput_2->setText("");
-    }
+//    QString cerror = addCheck.pop_back();
+//    if (cerror != "") {
+//        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.toStdString());
+//        ui->ustatusLabel2->setText("Error adding to database");
+//        return;
+//    }
+//    else{
+//        QMessageBox::information(this,"Record added","Successfully added to the database");
+//        ui->radiusInput->setText("");
+//        ui->xInput_2->setText("");
+//        ui->yInput_2->setText("");
+//        ui->ustatusLabel2->setText("Record added");
+//    }
+//    ui->tmitDistLbl->setText("The closest transmitter is "+addCheck.pop_front()+" units away, at ("+addCheck.pop_front()+","+addCheck.pop_front()+").");
+//    ui->assignedPowLbl->setText("The power that this user can transmit on is "+addCheck.pop_front()+"W.");
 }
 
 void UserAdmin::on_clearBtnCreate_2_clicked()
 {
-    ui->powerInput_2->setText("");
+    ui->radiusInput->setText("");
     ui->xInput_2->setText("");
     ui->yInput_2->setText("");
-}
-
-//-----------------Create Tab 2----------------------
-
-void UserAdmin::on_browseFile_2_clicked()
-{
-
-    //    QList<QStringList> headers;
-    //    bool firstCheck = true;
-
-    QString line;
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"C://","All files (*.*);;Text Files (*.txt);;CSV Files(*.csv)");
-    QFile file(fileName);
-
-    QTextStream ipLine(&file);
-    if (!file.open(QIODevice::ReadOnly)){
-        qDebug()<<file.errorString();
-        return;
-    }
-
-    do{
-        //        if (firstCheck){
-        //            line = ipLine.readLine();
-        //            headers << line.split(',');
-
-        //            //check if headers are right, and if not, either error out or put line back to first line
-        //            int numCount = 0;
-        //            while (headers.hasNext()) {
-        //                QString current = headers.next();
-        //                QRegExp re("\\d*");
-        //                if (re.exactMatch(current)){ numCount++;}
-        //                //https://stackoverflow.com/questions/8791380/how-to-detect-if-a-qstring-is-made-up-of-all-numeric-characters
-        //            }
-
-        //            firstCheck = false;
-        //        }
-        //        else{
-        line = ipLine.readLine();
-        columns_2 << line.split(',');
-        //        }
-    } while (!line.isNull());
-
-    //check if header has same number of columns_2 as data
-    //    if(headers.length()!=columns_2.length()||headers.length()!=3){
-    //        QMessageBox::critical(this,"Error","Wrong number of columns_2 in file");
-    //        return;
-    //    }
-
-    //    if (headers!=nullptr){ ui->fileTableWidget->setHorizontalHeaderLabels(headers); }
-    //    else {
-    ui->tableWidget_2->model()->setHeaderData(1,Qt::Horizontal,QStringLiteral("Power"));
-    ui->tableWidget_2->model()->setHeaderData(2,Qt::Horizontal,QStringLiteral("Radius"));
-    ui->tableWidget_2->model()->setHeaderData(3,Qt::Horizontal,QStringLiteral("X Coord"));
-    ui->tableWidget_2->model()->setHeaderData(4,Qt::Horizontal,QStringLiteral("Y Coord"));
-    //    }
-    ui->tableWidget_2->setRowCount(columns_2.size());
-    ui->tableWidget_2->setColumnCount(columns_2[0].size());
-
-    for (int i = 0; i<columns_2.size(); ++i){
-        for (int j = 0; j<columns_2[i].size(); ++j){
-            ui->tableWidget_2->setItem(i,j,new QTableWidgetItem(columns_2[i][j]));
-        }
-    }
-}
-
-void UserAdmin::on_addAllBtn_2_clicked()
-{
-    //return descriptive error when tried to click/add without db conn
-
-    QVariantList xin;
-    QVariantList yin;
-    QVariantList pin;
-    QVariantList radiusList;
-
-    //action based on number of columns_2?
-    for (int i = 0; i<columns_2.size()-1; ++i){
-        for (int j = 0; j<columns_2[i].size(); ++j){
-            switch(j) {
-            case 0 :
-                radiusList<<(columns_2[i][j]);
-                break;
-            case 1 :
-                pin<<(columns_2[i][j]);
-                break;
-            case 2 :
-                xin<<(columns_2[i][j]);
-                break;
-            case 3 :
-                yin<<(columns_2[i][j]);
-                break;
-            default :
-                cout << "Invalid item" << endl;
-            }
-        }
-        //      User *User = new User( xin.last().toDouble(), yin.at(j).toInt(), pin.at(j).toInt()); //?? fix TODO
-    }
-
-    //handle User going to same location as user but later
-
-    Database connection;
-
-    QSqlError cerror = connection.addBulk("U", pin, radiusList, xin, yin);
-    if (cerror.type() != QSqlError::NoError) {
-        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.text()+" ");
-    }
-    else{
-        QMessageBox::information(this,"Records added","Successfully added to the database");
-        ui->tableWidget_2->clear();
-    }
-
-}
-
-void UserAdmin::on_toolBox_2_currentChanged(int index)
-{
-    foreach(QLineEdit* lineEd, findChildren<QLineEdit*>()) { lineEd->clear(); }
-    ui->tableWidget_2->clear();
-}
-
-void UserAdmin::on_clearFileBtn_2_clicked()
-{
-    ui->tableWidget_2->clear();
+    ui->ustatusLabel2->setText("");
 }
 
 //-------------------Modify Tab----------------------
@@ -191,55 +70,124 @@ void UserAdmin::on_ModifyBtn_2_clicked()
     Database connection;
     QString id = ui->userDropDown->currentText();
     QString pin = ui->powerInputModify_2->text();
-    QString rin = ui->powerInputModify_2->text();
+    QString rin = ui->radiusInputModify->text();
     QString xin = ui->xInputModify_2->text();
     QString yin = ui->yInputModify_2->text();
+    QString type = "U";
 
-    QSqlError cerror = connection.addModifiedItem(id, pin, rin, xin, yin);
+    QSqlError cerror = connection.addModifiedItem(id, type, pin, rin, xin, yin);
     if (cerror.type() != QSqlError::NoError) {
         QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror.text()+" ");
+        ui->ustatusLabel3->setText("Error updating item");
     }
     else{
         QMessageBox::information(this,"Record updated","Successfully updated the record");
-        ui->tableWidget_2->clear();
+        ui->ustatusLabel3->setText("Record updated");
     }
 
     ui->powerInputModify_2->clear();
-    ui->radiusInputModify_2->clear();
+    ui->radiusInputModify->clear();
     ui->xInputModify_2->clear();
     ui->yInputModify_2->clear();
 }
 
 void UserAdmin::on_userDropDown_currentIndexChanged(const QString &arg1) {
+
+    ui->ustatusLabel3->setText("");
     QString uID = ui->userDropDown->currentText();
     Database connection;
 
     QSqlQuery query = connection.getRow(uID);
     if (query.exec()){
         while(query.next()){
-            ui->powerInputModify_2->setText(query.value(1).toString());
-            ui->radiusInputModify_2->setText(query.value(2).toString());
-            ui->xInputModify_2->setText(query.value(3).toString());
-            ui->yInputModify_2->setText(query.value(4).toString());
+            ui->powerInputModify_2->setText(query.value(2).toString());
+            ui->radiusInputModify->setText(query.value(3).toString());
+            ui->xInputModify_2->setText(query.value(4).toString());
+            ui->yInputModify_2->setText(query.value(5).toString());
         }
-    } else{QMessageBox::critical(this,"Error","Unable to fetch data from database: "+query.lastError().text());
+    } else {
+        QMessageBox::critical(this,"Error","Unable to fetch data from database: "+query.lastError().text());
+        ui->ustatusLabel3->setText("Unable to fetch data");
     }
-
 }
 
 void UserAdmin::on_tabWidget_2_currentChanged(int index)
 {
-    //set placeholder item in dropdown?
-    //only get user devices
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
         model->setQuery(connection.getIDs("U"));
         ui->userDropDown->setModel(model);
+        ui->ustatusLabel3->setText("");
     }
     if(index==2){
         model->setQuery(connection.getAllOfType("U"));
+        model->insertColumn(0);
+        model->setHeaderData(0, Qt::Horizontal, tr("Select"));
+        ui->uListView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        ui->uListView_2->setModel(model);
+        //https://stackoverflow.com/questions/21409457/a-checkbox-only-column-in-qtableview
+        int p;
+        for(p = 0;p<model ->rowCount();p++)
+        {
+            ui->uListView_2->setIndexWidget(model->index(p,0),new QCheckBox());
+        }
+        ui->ustatusLabel5->setText("");
+    }
+    if(index==3){
+        model->setQuery(connection.getAllOfType("U"));
         ui->uListView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->uListView->setModel(model);
+        ui->ustatusLabel4->setText("");
     }
+}
+
+void UserAdmin::on_uExportBtn_clicked()
+{
+    QString outdata;
+    int rows = ui->uListView->model()->rowCount();
+    int columns = ui->uListView->model()->columnCount();
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+
+                outdata += ui->uListView->model()->data(ui->uListView->model()->index(i,j)).toString();
+                outdata += ", ";
+        }
+        outdata += "\n";
+    }
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save WSDB To File"), "C://","CSV Files(*.csv);;Text Files (*.txt);;All files (*.*)");
+    QFile file(fileName);
+    if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QTextStream out(&file);
+        out << outdata;
+        file.close();
+
+        QMessageBox::information(this,"List exported","Successfully exported to file");
+        ui->ustatusLabel4->setText("List exported");
+    }
+    else {
+        QMessageBox::critical(this,"Error","Unable to export to file: "+file.errorString()+" ");
+        ui->ustatusLabel4->setText("Error exporting");
+    }
+}
+
+void UserAdmin::on_removeBtn_clicked()
+{
+    //update status label
+}
+
+void UserAdmin::on_clrSelectBtn_clicked()
+{
+
+}
+
+void UserAdmin::on_helpBtn_clicked()
+{
+    QString helpText = "Write this, Aidan, you Irish twat";
+    HelpDialog helpPopUp;
+    helpPopUp.setHelpText(helpText);
+    helpPopUp.setModal(true);
+    helpPopUp.exec();
 }

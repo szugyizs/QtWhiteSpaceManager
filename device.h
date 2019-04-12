@@ -23,8 +23,6 @@ public:
     double getPower();
     void setPower(double pow);
 
-    double distance(double x1, double y1, double x2, double y2);
-
 protected:
     QString ID_;
     QString type_;
@@ -32,6 +30,7 @@ protected:
     int x_;
     int y_;
     int tR_ = 6;
+    double tP_ = 1000;
     double D_;
     int radius_;
 };
