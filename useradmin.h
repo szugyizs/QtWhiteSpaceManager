@@ -40,6 +40,8 @@ private slots:
 
     void on_helpBtn_clicked();
 
+    void on_plotUBtn_clicked();
+
 private:
     Ui::UserAdmin *ui;
     QString ID_;

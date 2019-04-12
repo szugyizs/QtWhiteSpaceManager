@@ -22,7 +22,7 @@ public:
     QSqlQuery getIDs(QString type);
     QSqlQuery getRow(QString ID);
     QSqlQuery getAllOfType(QString type);
-    //QStandardItemModel getCheckBoxAll(QString type);
+    QSqlError removeRecords(QStringList rows);
     QVariantList checkInterference(double x, double y, QString type);
     double distance(double x1, double y1, double x2, double y2);
 

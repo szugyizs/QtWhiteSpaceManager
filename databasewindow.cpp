@@ -61,6 +61,7 @@ void DatabaseWindow::on_connectDbBtn_clicked()
     model->setQuery(dbase.setupModel());
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableView->setModel(model);
+    ui->tableView->setSelectionMode(QAbstractItemView::NoSelection);
 
     emit connEstablished(true);
 }

@@ -29,6 +29,7 @@ ListTab_2::ListTab_2(QWidget *parent) : QWidget(parent) { }
 RemoveTab_2::RemoveTab_2(QWidget *parent) : QWidget(parent) { }
 
 //-------------------Create Tab----------------------
+//TODO
 void UserAdmin::on_addBtnManual_2_clicked()
 {
     int xin = ui->xInput_2->text().toInt();
@@ -37,23 +38,25 @@ void UserAdmin::on_addBtnManual_2_clicked()
     //User *user = new User(rin, xin, yin);
 
     Database connection;
-//    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
+    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
 
-//    QString cerror = addCheck.pop_back();
-//    if (cerror != "") {
-//        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.toStdString());
-//        ui->ustatusLabel2->setText("Error adding to database");
-//        return;
-//    }
-//    else{
-//        QMessageBox::information(this,"Record added","Successfully added to the database");
-//        ui->radiusInput->setText("");
-//        ui->xInput_2->setText("");
-//        ui->yInput_2->setText("");
-//        ui->ustatusLabel2->setText("Record added");
-//    }
-//    ui->tmitDistLbl->setText("The closest transmitter is "+addCheck.pop_front()+" units away, at ("+addCheck.pop_front()+","+addCheck.pop_front()+").");
-//    ui->assignedPowLbl->setText("The power that this user can transmit on is "+addCheck.pop_front()+"W.");
+    QString cerror = addCheck.last().toString();
+    if (cerror != ""&&cerror != " ") {
+        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror);
+        ui->ustatusLabel2->setText("Error adding to database");
+        return;
+    }
+    else{
+        QMessageBox::information(this,"Record added","Successfully added to the database");
+        ui->radiusInput->setText("");
+        ui->xInput_2->setText("");
+        ui->yInput_2->setText("");
+        ui->ustatusLabel2->setText("Record added");
+    }
+    addCheck.pop_back();
+    ui->assignedPowLbl->setText("The power that this user can transmit on is "+addCheck.last().toString()+"W.");
+    ui->tmitDistLbl->setText("The closest transmitter is "+addCheck.first().toString()+" units away, at (");//+addCheck.at(1).toString()+","+addCheck.at(2).toString()+").");
+    //TODO returns
 }
 
 void UserAdmin::on_clearBtnCreate_2_clicked()
@@ -62,9 +65,12 @@ void UserAdmin::on_clearBtnCreate_2_clicked()
     ui->xInput_2->setText("");
     ui->yInput_2->setText("");
     ui->ustatusLabel2->setText("");
+    ui->tmitDistLbl->setText("");
+    ui->assignedPowLbl->setText("");
 }
 
 //-------------------Modify Tab----------------------
+//TODO
 void UserAdmin::on_ModifyBtn_2_clicked()
 {
     Database connection;
@@ -116,28 +122,28 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
+        ui->powerInputModify_2->clear();
+        ui->radiusInputModify->clear();
+        ui->xInputModify_2->clear();
+        ui->yInputModify_2->clear();
+
         model->setQuery(connection.getIDs("U"));
         ui->userDropDown->setModel(model);
         ui->ustatusLabel3->setText("");
     }
     if(index==2){
         model->setQuery(connection.getAllOfType("U"));
-        model->insertColumn(0);
-        model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->uListView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->uListView_2->setModel(model);
-        //https://stackoverflow.com/questions/21409457/a-checkbox-only-column-in-qtableview
-        int p;
-        for(p = 0;p<model ->rowCount();p++)
-        {
-            ui->uListView_2->setIndexWidget(model->index(p,0),new QCheckBox());
-        }
+        ui->uListView_2->setSelectionMode(QAbstractItemView::MultiSelection);
+        ui->uListView_2->setSelectionBehavior(QAbstractItemView::SelectRows);
         ui->ustatusLabel5->setText("");
     }
     if(index==3){
         model->setQuery(connection.getAllOfType("U"));
         ui->uListView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->uListView->setModel(model);
+        ui->uListView->setSelectionMode(QAbstractItemView::NoSelection);
         ui->ustatusLabel4->setText("");
     }
 }
@@ -151,13 +157,13 @@ void UserAdmin::on_uExportBtn_clicked()
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
 
-                outdata += ui->uListView->model()->data(ui->uListView->model()->index(i,j)).toString();
-                outdata += ", ";
+            outdata += ui->uListView->model()->data(ui->uListView->model()->index(i,j)).toString();
+            outdata += ", ";
         }
         outdata += "\n";
     }
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save WSDB To File"), "C://","CSV Files(*.csv);;Text Files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save User Devices To File"), "C://","CSV Files(*.csv);;Text Files (*.txt);;All files (*.*)");
     QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&file);
@@ -175,14 +181,36 @@ void UserAdmin::on_uExportBtn_clicked()
 
 void UserAdmin::on_removeBtn_clicked()
 {
-    //update status label
+    if(ui->uListView_2->selectionModel()->hasSelection()){
+        QModelIndexList selected = ui->uListView_2->selectionModel()->selectedRows();
+        QStringList selectedRows;
+        for(int i=0; i< selected.count(); i++) {
+            QModelIndex index = selected.at(i);
+            selectedRows << ui->uListView_2->model()->data(index).toString();
+        }
+        Database connection;
+        QSqlError err = connection.removeRecords(selectedRows);
+        if (err.type() != QSqlError::NoError) {
+            QMessageBox::critical(this,"Error","Unable to remove data from database: "+err.text());
+            ui->ustatusLabel5->setText("Unable to fetch data");
+        } else {
+            QMessageBox::information(this,"Success","Successfully removed records from database");
+            ui->ustatusLabel5->setText("Successfully removed ");
+            QSqlQueryModel *model = new QSqlQueryModel();
+            model->setQuery(connection.getAllOfType("U"));
+            ui->uListView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+            ui->uListView_2->setModel(model);
+        }
+    }
 }
 
 void UserAdmin::on_clrSelectBtn_clicked()
 {
-
+    ui->uListView_2->clearSelection();
+    ui->ustatusLabel5->setText("");
 }
 
+//TODO
 void UserAdmin::on_helpBtn_clicked()
 {
     QString helpText = "Write this, Aidan, you Irish twat";
@@ -190,4 +218,10 @@ void UserAdmin::on_helpBtn_clicked()
     helpPopUp.setHelpText(helpText);
     helpPopUp.setModal(true);
     helpPopUp.exec();
+}
+
+//TODO
+void UserAdmin::on_plotUBtn_clicked()
+{
+
 }

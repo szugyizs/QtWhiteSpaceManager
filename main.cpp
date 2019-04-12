@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     NavaidsModel model;
-    model.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\cctv1.csv");
+    //model.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\cctv1.csv");
     model.addNavaidsPoint(NavaidsPoint("glasgow", 55.86,-4.251, "NG"));//from file
 
      //add new point

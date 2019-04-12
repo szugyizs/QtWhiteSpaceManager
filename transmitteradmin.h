@@ -48,6 +48,8 @@ private slots:
 
     void on_helpBtn_clicked();
 
+    void on_plotTBtn_clicked();
+
 private:
     Ui::TransmitterAdmin *ui;
     QString ID_;

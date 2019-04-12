@@ -29,6 +29,7 @@ RemoveTab::RemoveTab(QWidget *parent) : QWidget(parent) { }
 ListTab::ListTab(QWidget *parent) : QWidget(parent) { }
 
 //-------------------Create Tab----------------------
+//TODO
 void TransmitterAdmin::on_addBtnManual_clicked()
 {
     int xin = ui->xInput->text().toInt();
@@ -63,7 +64,7 @@ void TransmitterAdmin::on_clearBtnCreate_clicked()
 }
 
 //-----------------Create Tab 2----------------------
-
+//TODO
 void TransmitterAdmin::on_browseFile_clicked()
 {
     columns.clear();
@@ -122,6 +123,7 @@ void TransmitterAdmin::on_browseFile_clicked()
     //    }
     ui->fileTableWidget->setRowCount(columns.size()-1);
     ui->fileTableWidget->setColumnCount(columns[0].size());
+    ui->fileTableWidget->setSelectionMode(QAbstractItemView::NoSelection);
     for (int i=0; i<headers.length(); i++){ ui->fileTableWidget->setHorizontalHeaderItem(i,new QTableWidgetItem(headers.at(i)));}
 
     for (int i = 0; i<columns.size(); ++i){
@@ -132,6 +134,7 @@ void TransmitterAdmin::on_browseFile_clicked()
     ui->tstatusLabel1->setText("File loaded");
 }
 
+//TODO
 void TransmitterAdmin::on_addAllBtn_clicked()
 {
     //return descriptive error when tried to click/add without db conn
@@ -196,6 +199,7 @@ void TransmitterAdmin::on_clearFileBtn_clicked() {
 }
 
 //-------------------Modify Tab----------------------
+//TODO
 void TransmitterAdmin::on_ModifyBtn_clicked()
 {
     Database connection;
@@ -251,22 +255,19 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
     }
     if(index==2){
         model->setQuery(connection.getAllOfType("T"));
-        model->insertColumn(0);
+        //model->insertColumn(0);
         model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView_2->setModel(model);
-        //https://stackoverflow.com/questions/21409457/a-checkbox-only-column-in-qtableview
-        int p;
-        for(p = 0;p<model ->rowCount();p++)
-        {
-            ui->ListTableView_2->setIndexWidget(model->index(p,0),new QCheckBox());
-        }
+        ui->ListTableView_2->setSelectionMode(QAbstractItemView::MultiSelection);
+        ui->ListTableView_2->setSelectionBehavior(QAbstractItemView::SelectRows);
         ui->tstatusLabel5->setText("");
     }
     if(index==3){
         model->setQuery(connection.getAllOfType("T"));
         ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView->setModel(model);
+        ui->ListTableView->setSelectionMode(QAbstractItemView::NoSelection);
         ui->tstatusLabel4->setText("");
     }
 }
@@ -304,43 +305,36 @@ void TransmitterAdmin::on_tExportBtn_clicked()
 
 void TransmitterAdmin::on_removeBtn_clicked()
 {
-    cout<<"here"<<endl;
-    //    Database connection;
-
-    //    QStringList IDlist;
-    QModelIndex index;
-    index = ui->ListTableView_2->model()->index(0,0);
-    QWidget *ey = ui->ListTableView_2->indexWidget(index);
-    //    if(ui->ListTableView_2->indexWidget(index)->){
-    //    cout<<"YASSSSSSS(Qt::CheckStateRole) == Qt::Checked)"<<endl;
-    //    }
-    //    else{cout<<"NOOOO"<<endl;}
-
-
-    //get selections from view
-    //add selected ids to idlist
-
-    //    QSqlError cerror = connection.removeItems(IDlist);
-    //    if (cerror.type() != QSqlError::NoError) {
-    //        QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror.text()+" ");
-    //        ui->tstatusLabel3->setText("Unable to update");
-    //    }
-    //    else{
-    //        QMessageBox::information(this,"Record updated","Successfully updated the record");
-    //        ui->tstatusLabel3->setText("Record updated");
-    //        ui->fileTableWidget->clear();
-    //    }
-
-    //update model
-    //clear selections
+    if(ui->ListTableView_2->selectionModel()->hasSelection()){
+        QModelIndexList selected = ui->ListTableView_2->selectionModel()->selectedRows();
+        QStringList selectedRows;
+        for(int i=0; i< selected.count(); i++) {
+            QModelIndex index = selected.at(i);
+            selectedRows << ui->ListTableView_2->model()->data(index).toString();
+        }
+        Database connection;
+        QSqlError err = connection.removeRecords(selectedRows);
+        if (err.type() != QSqlError::NoError) {
+            QMessageBox::critical(this,"Error","Unable to remove data from database: "+err.text());
+            ui->tstatusLabel5->setText("Unable to fetch data");
+        } else {
+            QMessageBox::information(this,"Success","Successfully removed records from database");
+            ui->tstatusLabel5->setText("Successfully removed ");
+            QSqlQueryModel *model = new QSqlQueryModel();
+            model->setQuery(connection.getAllOfType("U"));
+            ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+            ui->ListTableView_2->setModel(model);
+        }
+    }
 }
 
 void TransmitterAdmin::on_clrSelectBtn_clicked()
 {
-    //clear selections
-
+    ui->ListTableView_2->clearSelection();
+    ui->tstatusLabel5->setText("");
 }
 
+//TODO
 void TransmitterAdmin::on_helpBtn_clicked()
 {
     QString helpText = "Physics is for shitebags";
@@ -348,4 +342,10 @@ void TransmitterAdmin::on_helpBtn_clicked()
     helpPopUp.setHelpText(helpText);
     helpPopUp.setModal(true);
     helpPopUp.exec();
+}
+
+//TODO
+void TransmitterAdmin::on_plotTBtn_clicked()
+{
+
 }
