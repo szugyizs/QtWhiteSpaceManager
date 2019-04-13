@@ -34,8 +34,7 @@ void TransmitterAdmin::on_addBtnManual_clicked()
 {
     int xin = ui->xInput->text().toInt();
     int yin = ui->yInput->text().toInt();
-    double pin = 4;
-    Transmitter *transmitter = new Transmitter(xin, yin, pin);
+    //Transmitter *transmitter = new Transmitter(xin, yin);
 
 //    Database connection;
 //    QVariantList addCheck = connection.addItem("T", transmitter->getRadius(), xin, yin);

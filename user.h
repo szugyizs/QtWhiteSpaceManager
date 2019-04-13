@@ -7,7 +7,8 @@ class User : public virtual Device {
 public:
     User();
     ~User();
-    User(int rad, int x, int y, QString tID, double pow);
-    User(int rad, int x, int y, double pow);
+    User(int rad, double x, double y, QString ID, double pow);
+    User(int rad, double x, double y, QString ID);
+    User(int rad, double x, double y);
 };
 #endif

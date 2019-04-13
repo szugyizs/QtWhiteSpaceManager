@@ -34,7 +34,7 @@ QSqlQuery Database::setupModel(){
     query->exec();
     return *query;
 }
-
+//TODO
 QVariantList Database::addItem(QString type, int radius, double x, double y){
     QSqlQuery queryAdd;
     double power;
@@ -61,6 +61,7 @@ QVariantList Database::addItem(QString type, int radius, double x, double y){
     return result;
 }
 
+//TODO
 QSqlError Database::addModifiedItem(QString ID, QString type, QString power, QString radius, QString x, QString y){
     QSqlQuery queryAdd;
     queryAdd.prepare("UPDATE `whitespacetable` SET Type = '"+type+"',Power = '"+power+"',Radius = '"+radius+"',X = '"+x+"',Y = '"+y+"' WHERE ID = '"+ID+"'");
@@ -68,6 +69,7 @@ QSqlError Database::addModifiedItem(QString ID, QString type, QString power, QSt
     else{ return queryAdd.lastError(); }
 }
 
+//TODO
 QSqlError Database::addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y){
     QSqlQuery queryBulk;
 //    for(int i=0; i<x.length(); i++){}

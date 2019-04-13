@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>hhh.qml</file>
         <file>mapdata.qml</file>
     </qresource>
 </RCC>

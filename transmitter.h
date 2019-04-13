@@ -7,7 +7,8 @@ class Transmitter : public virtual Device {
 public:
     Transmitter();
     ~Transmitter();
-    Transmitter(int x, int y, QString tID, double pow);
-    Transmitter(int x, int y, double pow);
+    Transmitter(int rad, double x, double y, QString id, double pow);
+    Transmitter(double x, double y, QString ID);
+    Transmitter(double x, double y);
 };
 #endif

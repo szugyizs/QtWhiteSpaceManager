@@ -32,13 +32,13 @@ RemoveTab_2::RemoveTab_2(QWidget *parent) : QWidget(parent) { }
 //TODO
 void UserAdmin::on_addBtnManual_2_clicked()
 {
-    int xin = ui->xInput_2->text().toInt();
-    int yin = ui->yInput_2->text().toInt();
+    double xin = ui->xInput_2->text().toDouble();
+    double yin = ui->yInput_2->text().toDouble();
     int rin = ui->radiusInput->text().toInt();
     //User *user = new User(rin, xin, yin);
 
     Database connection;
-    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
+    QVariantList addCheck = connection.addItem("U", rin, xin, yin);
 
     QString cerror = addCheck.last().toString();
     if (cerror != ""&&cerror != " ") {
@@ -75,21 +75,22 @@ void UserAdmin::on_ModifyBtn_2_clicked()
 {
     Database connection;
     QString id = ui->userDropDown->currentText();
-    QString pin = ui->powerInputModify_2->text();
-    QString rin = ui->radiusInputModify->text();
-    QString xin = ui->xInputModify_2->text();
-    QString yin = ui->yInputModify_2->text();
+    double pin = ui->powerInputModify_2->text().toDouble();
+    int rin = ui->radiusInputModify->text().toInt();
+    double xin = ui->xInputModify_2->text().toDouble();
+    double yin = ui->yInputModify_2->text().toDouble();
     QString type = "U";
 
-    QSqlError cerror = connection.addModifiedItem(id, type, pin, rin, xin, yin);
-    if (cerror.type() != QSqlError::NoError) {
-        QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror.text()+" ");
-        ui->ustatusLabel3->setText("Error updating item");
-    }
-    else{
-        QMessageBox::information(this,"Record updated","Successfully updated the record");
-        ui->ustatusLabel3->setText("Record updated");
-    }
+    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
+//    QSqlError addErr = addCheck.last();
+//    if (addErr.type() != QSqlError::NoError) {
+//        QMessageBox::critical(this,"Error","Unable to update item in database: "+addErr.text()+" ");
+//        ui->ustatusLabel3->setText("Error updating item");
+//    }
+//    else{
+//        QMessageBox::information(this,"Record updated","Successfully updated the record");
+//        ui->ustatusLabel3->setText("Record updated");
+//    }
 
     ui->powerInputModify_2->clear();
     ui->radiusInputModify->clear();

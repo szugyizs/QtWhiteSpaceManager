@@ -6,14 +6,14 @@ class Device{
 public:
     Device();
     virtual ~Device();
-    Device(int rad, int x, int y, QString tID, double pow);
-    Device(int rad, int x, int y, double pow);
-    Device(int x, int y, double pow);
+    Device(int rad, double x, double y, QString tID, double pow);
+    Device(int rad, double x, double y);
+    Device(double x, double y);
 
-    int getX();
-    int getY();
-    void setX(int x);
-    void setY(int y);
+    double getX();
+    double getY();
+    void setX(double x);
+    void setY(double y);
     int getRadius();
     void setRadius(int rad);
     QString getType();
@@ -27,8 +27,8 @@ protected:
     QString ID_;
     QString type_;
     double power_;
-    int x_;
-    int y_;
+    double x_;
+    double y_;
     int tR_ = 6;
     double tP_ = 1000;
     double D_;

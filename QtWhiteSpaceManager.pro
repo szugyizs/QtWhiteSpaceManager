@@ -33,7 +33,8 @@ SOURCES += \
     databasewindow.cpp \
     transmitteradmin.cpp \
     useradmin.cpp \
-    helpdialog.cpp
+    helpdialog.cpp \
+    mapdialog.cpp
 RESOURCES += \
     mapper.qrc
 OTHER_FILES +=
@@ -48,18 +49,19 @@ HEADERS += \
     useradmin.h \
     tvwsmodel.h \
     tvwspoint.h \
-    helpdialog.h
+    helpdialog.h \
+    mapdialog.h
 
 FORMS += \
     databasewindow.ui \
     transmitteradmin.ui \
     useradmin.ui \
-    helpdialog.ui
+    helpdialog.ui \
+    mapdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    hhh.qml
+DISTFILES +=
