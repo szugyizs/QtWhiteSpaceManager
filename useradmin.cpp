@@ -29,7 +29,6 @@ ListTab_2::ListTab_2(QWidget *parent) : QWidget(parent) { }
 RemoveTab_2::RemoveTab_2(QWidget *parent) : QWidget(parent) { }
 
 //-------------------Create Tab----------------------
-//TODO
 void UserAdmin::on_addBtnManual_2_clicked()
 {
     double xin = ui->xInput_2->text().toDouble();
@@ -54,9 +53,11 @@ void UserAdmin::on_addBtnManual_2_clicked()
         ui->ustatusLabel2->setText("Record added");
     }
     addCheck.pop_back();
-    ui->assignedPowLbl->setText("The power that this user can transmit on is "+addCheck.last().toString()+"W.");
-    ui->tmitDistLbl->setText("The closest transmitter is "+addCheck.first().toString()+" units away, at (");//+addCheck.at(1).toString()+","+addCheck.at(2).toString()+").");
-    //TODO returns
+    ui->assignedPowLbl->setText("The user can transmit on "+addCheck.last().toString()+"W.");
+    addCheck.pop_back();
+    ui->tmitDistLbl->setText("It is "+addCheck.first().toString()+" units away");
+    addCheck.pop_front();
+    ui->tmitDistLbl_2->setText("It is located at ("+addCheck.first().toString()+","+addCheck.last().toString()+").");
 }
 
 void UserAdmin::on_clearBtnCreate_2_clicked()
@@ -70,7 +71,6 @@ void UserAdmin::on_clearBtnCreate_2_clicked()
 }
 
 //-------------------Modify Tab----------------------
-//TODO
 void UserAdmin::on_ModifyBtn_2_clicked()
 {
     Database connection;
@@ -81,21 +81,29 @@ void UserAdmin::on_ModifyBtn_2_clicked()
     double yin = ui->yInputModify_2->text().toDouble();
     QString type = "U";
 
-    QVariantList addCheck = connection.addItem("U", rin, xin, yin); //change to Device type
-//    QSqlError addErr = addCheck.last();
-//    if (addErr.type() != QSqlError::NoError) {
-//        QMessageBox::critical(this,"Error","Unable to update item in database: "+addErr.text()+" ");
-//        ui->ustatusLabel3->setText("Error updating item");
-//    }
-//    else{
-//        QMessageBox::information(this,"Record updated","Successfully updated the record");
-//        ui->ustatusLabel3->setText("Record updated");
-//    }
+    QVariantList addCheck = connection.addModifiedItem(id, "U", pin, rin, xin, yin); //change to Device type
 
-    ui->powerInputModify_2->clear();
-    ui->radiusInputModify->clear();
-    ui->xInputModify_2->clear();
-    ui->yInputModify_2->clear();
+    QString cerror = addCheck.last().toString();
+    if (cerror != ""&&cerror != " ") {
+        QMessageBox::critical(this,"Error","Unable to modify to the database: "+cerror);
+        ui->ustatusLabel3->setText("Error adding to database");
+        return;
+    }
+    else{
+        QMessageBox::information(this,"Record added","Successfully modified to the database");
+        ui->radiusInputModify->setText("");
+        ui->powerInputModify_2->setText("");
+        ui->xInputModify_2->setText("");
+        ui->yInputModify_2->setText("");
+        ui->ustatusLabel3->setText("Record added");
+
+        addCheck.pop_back();
+        ui->assignedPowLbl_2->setText("The user can transmit on "+addCheck.last().toString()+"W.");
+        addCheck.pop_back();
+        ui->tmitDistLbl_3->setText("It is "+addCheck.first().toString()+" units away");
+        addCheck.pop_front();
+        ui->tmitDistLbl_4->setText("It is located at ("+addCheck.first().toString()+","+addCheck.last().toString()+").");
+    }
 }
 
 void UserAdmin::on_userDropDown_currentIndexChanged(const QString &arg1) {
@@ -130,6 +138,7 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
 
         model->setQuery(connection.getIDs("U"));
         ui->userDropDown->setModel(model);
+        ui->powerInputModify_2->setReadOnly(true);
         ui->ustatusLabel3->setText("");
     }
     if(index==2){
@@ -214,15 +223,9 @@ void UserAdmin::on_clrSelectBtn_clicked()
 //TODO
 void UserAdmin::on_helpBtn_clicked()
 {
-    QString helpText = "Write this, Aidan, you Irish twat";
+    QString helpText = "Rangers rule!";
     HelpDialog helpPopUp;
     helpPopUp.setHelpText(helpText);
     helpPopUp.setModal(true);
     helpPopUp.exec();
-}
-
-//TODO
-void UserAdmin::on_plotUBtn_clicked()
-{
-
 }

@@ -443,13 +443,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="plotTBtn">
-             <property name="text">
-              <string>Plot to map</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </item>
          <item>

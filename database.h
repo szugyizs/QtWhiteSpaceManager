@@ -16,7 +16,7 @@ public:
     void closeConnection(QWidget *window);
     QSqlQuery setupModel();
     QVariantList addItem(QString type, int radius, double x, double y);
-    QSqlError addModifiedItem(QString ID, QString type, QString power, QString radius, QString x, QString y);
+    QVariantList addModifiedItem(QString ID, QString type, double power, int radius, double x, double y);
     QString createID(QString type);
     QSqlError addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y);
     QSqlQuery getIDs(QString type);
@@ -24,6 +24,7 @@ public:
     QSqlQuery getAllOfType(QString type);
     QSqlError removeRecords(QStringList rows);
     QVariantList checkInterference(double x, double y, QString type);
+    QVariantList checkModInterference(double x, double y, QString type, QString ID);
     double distance(double x1, double y1, double x2, double y2);
 
 private:

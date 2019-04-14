@@ -29,30 +29,28 @@ RemoveTab::RemoveTab(QWidget *parent) : QWidget(parent) { }
 ListTab::ListTab(QWidget *parent) : QWidget(parent) { }
 
 //-------------------Create Tab----------------------
-//TODO
 void TransmitterAdmin::on_addBtnManual_clicked()
 {
     int xin = ui->xInput->text().toInt();
     int yin = ui->yInput->text().toInt();
     //Transmitter *transmitter = new Transmitter(xin, yin);
+    int rin = 6;
 
-//    Database connection;
-//    QVariantList addCheck = connection.addItem("T", transmitter->getRadius(), xin, yin);
-//    QString cerror = addCheck.pop_back();
-//    if (cerror != "") {
-//        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.text()+" ");
-//        ui->tstatusLabel2->setText("Error adding to database");
-//        return;
-//    }
-//    else{
-//        QMessageBox::information(this,"Record added","Successfully added to the database");
-//        ui->xInput->setText("");
-//        ui->yInput->setText("");
-//        ui->tstatusLabel2->setText("Record added");
-//    }
-//    ui->tmitDistLbl->setText("The closest transmitter is "+addCheck.pop_front()+" units away, at ("+addCheck.pop_front()+","+addCheck.pop_front()+").");
-//    ui->assignedPowLbl->setText("The power that this user can transmit on is "+addCheck.pop_front()+"W.");
+    Database connection;
+    QVariantList addCheck = connection.addItem("T", rin, xin, yin);
 
+    QString cerror = addCheck.last().toString();
+    if (cerror != ""&&cerror != " ") {
+        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror);
+        ui->tstatusLabel2->setText("Error adding to database");
+        return;
+    }
+    else{
+        QMessageBox::information(this,"Record added","Successfully added to the database");
+        ui->xInput->setText("");
+        ui->yInput->setText("");
+        ui->tstatusLabel2->setText("Record added");
+    }
 }
 
 void TransmitterAdmin::on_clearBtnCreate_clicked()
@@ -198,29 +196,30 @@ void TransmitterAdmin::on_clearFileBtn_clicked() {
 }
 
 //-------------------Modify Tab----------------------
-//TODO
 void TransmitterAdmin::on_ModifyBtn_clicked()
 {
     Database connection;
     QString id = ui->tmitDropDown->currentText();
     QString type = "T";
-    QString pin = "4";
-    QString xin = ui->xInputModify->text();
-    QString yin = ui->yInputModify->text();
-    QString rin = "6";
+    double pin = 1000;
+    double xin = ui->xInputModify->text().toDouble();
+    double yin = ui->yInputModify->text().toDouble();
+    int rin = 6;
 
-    QSqlError cerror = connection.addModifiedItem(id, type, pin, rin, xin, yin);
-    if (cerror.type() != QSqlError::NoError) {
-        QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror.text()+" ");
+    QVariantList addCheck = connection.addModifiedItem(id, type, pin, rin, xin, yin);
+
+    QString cerror = addCheck.last().toString();
+    if (cerror != ""&&cerror != " ") {
+        QMessageBox::critical(this,"Error","Unable to update item in database: "+cerror+" ");
         ui->tstatusLabel3->setText("Unable to update");
+        return;
     }
     else{
         QMessageBox::information(this,"Record updated","Successfully updated the record");
         ui->tstatusLabel3->setText("Record updated");
-    }
-
-    ui->xInputModify->clear();
-    ui->yInputModify->clear();
+        ui->xInputModify->clear();
+        ui->yInputModify->clear();
+    } 
 }
 
 void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
@@ -244,7 +243,6 @@ void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
 
 void TransmitterAdmin::on_tabWidget_currentChanged(int index)
 {
-    //set placeholder item in dropdown?
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
@@ -254,7 +252,6 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
     }
     if(index==2){
         model->setQuery(connection.getAllOfType("T"));
-        //model->insertColumn(0);
         model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView_2->setModel(model);
@@ -343,8 +340,3 @@ void TransmitterAdmin::on_helpBtn_clicked()
     helpPopUp.exec();
 }
 
-//TODO
-void TransmitterAdmin::on_plotTBtn_clicked()
-{
-
-}

@@ -29,11 +29,12 @@ Window {
         zoomLevel: 10
 
         MapItemView {
+            id: miv
             NavModel{
                 id: model
             }
 
-            //model: model
+            model: model
             //model: navModel
             delegate: MapCircle{
                 center: position
@@ -74,8 +75,10 @@ Window {
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 text: "Load transmitters"
-                onClicked: model.readFromCSV("cctv1.csv")
-                //onClicked: model.postMessage("Hello");
+                onClicked: {
+                    model.readFromCSV("cctv1.csv")
+                    miv.dataModelChanged()
+                }
             }
             Button {
                 id: userBtn

@@ -33,11 +33,11 @@ int main(int argc, char *argv[])
 //    model.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\cctv1.csv");
 //    model.addNavaidsPoint(NavaidsPoint("glasgow", 55.86,-4.251, "NG"));//from file
 
-    QQmlApplicationEngine engine;
-    //engine.rootContext()->setContextProperty("navaidsModel", &model);
-    engine.load(QUrl(QLatin1String("qrc:/mapdata.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    //QQmlApplicationEngine engine;
+    // //engine.rootContext()->setContextProperty("navaidsModel", &model);
+    //engine.load(QUrl(QLatin1String("qrc:/mapdata.qml")));
+    //if (engine.rootObjects().isEmpty())
+    //    return -1;
 
     return app.exec();
 }
