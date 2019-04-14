@@ -72,7 +72,7 @@ void TransmitterAdmin::on_browseFile_clicked()
     bool toHeader = true;
 
     QString line;
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"C://","All files (*.*);;Text Files (*.txt);;CSV Files(*.csv)");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"C://","All files (*.*);;CSV Files(*.csv)");
     QFile file(fileName);
 
     QTextStream ipLine(&file);

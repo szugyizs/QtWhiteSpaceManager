@@ -19,7 +19,7 @@ public:
         CountryCodeRole
     };
 
-    void readFromCSV(const QString &filename){
+   Q_INVOKABLE void readFromCSV(const QString &filename){
         QFile file(filename);
         if(!file.open(QFile::ReadOnly | QFile::Text))
             return;

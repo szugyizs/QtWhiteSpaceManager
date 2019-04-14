@@ -33,8 +33,7 @@ SOURCES += \
     databasewindow.cpp \
     transmitteradmin.cpp \
     useradmin.cpp \
-    helpdialog.cpp \
-    mapdialog.cpp
+    helpdialog.cpp
 RESOURCES += \
     mapper.qrc
 OTHER_FILES +=
@@ -49,15 +48,13 @@ HEADERS += \
     useradmin.h \
     tvwsmodel.h \
     tvwspoint.h \
-    helpdialog.h \
-    mapdialog.h
+    helpdialog.h
 
 FORMS += \
     databasewindow.ui \
     transmitteradmin.ui \
     useradmin.ui \
-    helpdialog.ui \
-    mapdialog.ui
+    helpdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
