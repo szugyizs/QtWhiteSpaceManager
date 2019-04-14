@@ -62,7 +62,6 @@ QVariantList Database::addItem(QString type, int radius, double x, double y){
     return result;
 }
 
-//TODO
 QVariantList Database::addModifiedItem(QString ID, QString type, double power, int radius, double x, double y){
     QSqlQuery queryAdd;
     QVariantList result = checkModInterference(x, y, type, ID);
@@ -203,7 +202,7 @@ QVariantList Database::checkInterference(double x, double y, QString type){
 
 QVariantList Database::checkModInterference(double x, double y, QString type, QString ID){
     QSqlQuery *query = new QSqlQuery(db);
-    query->prepare("select X, Y from whitespacetable where type='T' and not+'"+ID+"'");
+    query->prepare("select X, Y from whitespacetable where type='T' and not ID='"+ID+"'");
     query->exec();
 
     QList<QVariantList> queryPairs;
@@ -242,7 +241,6 @@ QVariantList Database::checkModInterference(double x, double y, QString type, QS
                 closestPt.push_back(queryPairs.at(i).at(1));
             }
         }
-        //do transmitters care about users already on location, and if so, how?
     }
     return closestPt;
 }

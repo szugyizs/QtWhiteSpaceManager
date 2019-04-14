@@ -22,6 +22,7 @@ UserAdmin::~UserAdmin()
 }
 
 QList<QStringList> columns_2;
+QString helpUserText = "Create tab helptext.";
 
 CreateTab_2::CreateTab_2(QWidget *parent) : QWidget(parent) { }
 ModifyTab_2::ModifyTab_2(QWidget *parent) : QWidget(parent) { }
@@ -130,7 +131,11 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
 {
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
+    if(index==0){
+        helpUserText="Create tab helpUserText";
+    }
     if(index==1){
+        helpUserText="Modify tab helpUserText";
         ui->powerInputModify_2->clear();
         ui->radiusInputModify->clear();
         ui->xInputModify_2->clear();
@@ -142,6 +147,7 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
         ui->ustatusLabel3->setText("");
     }
     if(index==2){
+        helpUserText="Remove tab helpUserText";
         model->setQuery(connection.getAllOfType("U"));
         ui->uListView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->uListView_2->setModel(model);
@@ -150,6 +156,7 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
         ui->ustatusLabel5->setText("");
     }
     if(index==3){
+        helpUserText="List tab helpUserText";
         model->setQuery(connection.getAllOfType("U"));
         ui->uListView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->uListView->setModel(model);
@@ -220,12 +227,10 @@ void UserAdmin::on_clrSelectBtn_clicked()
     ui->ustatusLabel5->setText("");
 }
 
-//TODO
 void UserAdmin::on_helpBtn_clicked()
 {
-    QString helpText = "Rangers rule!";
     HelpDialog helpPopUp;
-    helpPopUp.setHelpText(helpText);
+    helpPopUp.setHelpText(helpUserText);
     helpPopUp.setModal(true);
     helpPopUp.exec();
 }

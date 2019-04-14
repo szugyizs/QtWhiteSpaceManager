@@ -22,6 +22,7 @@ TransmitterAdmin::~TransmitterAdmin()
 }
 
 QList<QStringList> columns;
+QString helpTmitText = "Create file tab helptext.";
 
 CreateTab::CreateTab(QWidget *parent) : QWidget(parent) { }
 ModifyTab::ModifyTab(QWidget *parent) : QWidget(parent) { }
@@ -61,13 +62,13 @@ void TransmitterAdmin::on_clearBtnCreate_clicked()
 }
 
 //-----------------Create Tab 2----------------------
-//TODO
 void TransmitterAdmin::on_browseFile_clicked()
 {
     columns.clear();
     QList<QString> headers;
     bool firstCheck = true;
     bool toHeader = true;
+    int numOfCols = 0;
 
     QString line;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"C://","All files (*.*);;CSV Files(*.csv)");
@@ -90,8 +91,8 @@ void TransmitterAdmin::on_browseFile_clicked()
         if (firstCheck){
             line = ipLine.readLine();
             headers << line.split(',');
+            numOfCols = headers.count();
 
-            int numCount = 0;
             QListIterator<QString> hIt(headers);
             while (hIt.hasNext()) {
                 QString current = hIt.next();
@@ -99,25 +100,27 @@ void TransmitterAdmin::on_browseFile_clicked()
                 current.toDouble(&isNum);
                 if(isNum){ toHeader = false; }
             }
-            if (!toHeader){ columns<<line.split(',');}
+            if (!toHeader){
+                columns<<line.split(',');
+                if (columns.count()!=numOfCols){
+                    QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
+                    ui->tstatusLabel1->setText("Error loading file");
+                    return;
+                }
+            }
             firstCheck = false;
         }
         else{
             line = ipLine.readLine();
             columns << line.split(',');
+            if (columns.count()!=numOfCols){
+                QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
+                ui->tstatusLabel1->setText("Error loading file");
+                return;
+            }
         }
     } while (!line.isNull());
 
-    //check if header has same number of columns as data
-    //    if(headers.length()!=columns.length()||headers.length()!=3){
-    //        QMessageBox::critical(this,"Error","Wrong number of columns in file");
-    //        return;
-    //    }
-
-    //    if (headers!=nullptr){ ui->fileTableWidget->setHorizontalHeaderLabels(headers); }
-    //    else {
-
-    //    }
     ui->fileTableWidget->setRowCount(columns.size()-1);
     ui->fileTableWidget->setColumnCount(columns[0].size());
     ui->fileTableWidget->setSelectionMode(QAbstractItemView::NoSelection);
@@ -134,8 +137,6 @@ void TransmitterAdmin::on_browseFile_clicked()
 //TODO
 void TransmitterAdmin::on_addAllBtn_clicked()
 {
-    //return descriptive error when tried to click/add without db conn
-
     QVariantList xin;
     QVariantList yin;
     QVariantList pin;
@@ -182,6 +183,8 @@ void TransmitterAdmin::on_addAllBtn_clicked()
 
 void TransmitterAdmin::on_toolBox_currentChanged(int index)
 {
+    if (index==0){ helpTmitText = "Create file page helpTmitText";}
+    else{ helpTmitText = "Create manual helpTmitText";}
     foreach(QLineEdit* lineEd, findChildren<QLineEdit*>()) { lineEd->clear(); }
     ui->fileTableWidget->clear();
     ui->tstatusLabel1->setText("");
@@ -246,11 +249,13 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
+        helpTmitText = "Modify page helpTmitText";
         model->setQuery(connection.getIDs("T"));
         ui->tmitDropDown->setModel(model);
         ui->tstatusLabel3->setText("");
     }
     if(index==2){
+        helpTmitText = "Remove page helpTmitText";
         model->setQuery(connection.getAllOfType("T"));
         model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -260,6 +265,7 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
         ui->tstatusLabel5->setText("");
     }
     if(index==3){
+        helpTmitText = "List page helpTmitText";
         model->setQuery(connection.getAllOfType("T"));
         ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView->setModel(model);
@@ -330,12 +336,10 @@ void TransmitterAdmin::on_clrSelectBtn_clicked()
     ui->tstatusLabel5->setText("");
 }
 
-//TODO
 void TransmitterAdmin::on_helpBtn_clicked()
 {
-    QString helpText = "Physics is for shitebags";
     HelpDialog helpPopUp;
-    helpPopUp.setHelpText(helpText);
+    helpPopUp.setHelpText(helpTmitText);
     helpPopUp.setModal(true);
     helpPopUp.exec();
 }
