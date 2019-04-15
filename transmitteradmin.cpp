@@ -117,6 +117,7 @@ void TransmitterAdmin::on_browseFile_clicked()
                 QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
                 ui->tstatusLabel1->setText("Error loading file");
                 return;
+
             }
         }
     } while (!line.isNull());
@@ -132,6 +133,7 @@ void TransmitterAdmin::on_browseFile_clicked()
         }
     }
     ui->tstatusLabel1->setText("File loaded");
+    ui->addAllBtn->setEnabled(true);
 }
 
 //TODO
@@ -141,8 +143,44 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     QVariantList yin;
     QVariantList pin;
     QVariantList radiusList;
+    QString confirmMsg;
 
-    //action based on number of columns?
+//    switch(columns.size()){
+//    case 2:
+//        confirmMsg="Are the columns: X , Y; in this order?";
+//        if (confirmPopUp()){
+//            //add whatever
+//        }
+//        else {
+//            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
+//            ui->tstatusLabel1->setText("Invalid types of columns");
+//            return;
+//        }
+//        break;
+//    case 3:
+//        //switch
+//        break;
+//    case 4:
+//        //switch
+//        break;
+//    case 5:
+//        confirmMs="Are the columns: Type, Power, Radius, X , Y; in this order?";
+//        if (confirmPopUp()){
+//            //add whatever
+//        }
+//        else {
+//            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
+//            ui->tstatusLabel1->setText("Invalid types of columns");
+//            return;
+//        }
+//        break;
+//    default:
+//        QMessageBox::critical(this,"Error","Invalid number of columns ");
+//        ui->tstatusLabel1->setText("Invalid number of columns");
+//        return;
+//    }
+
+
     for (int i = 0; i<columns.size()-1; ++i){
         for (int j = 0; j<columns[i].size(); ++j){
             switch(j) {
@@ -183,8 +221,8 @@ void TransmitterAdmin::on_addAllBtn_clicked()
 
 void TransmitterAdmin::on_toolBox_currentChanged(int index)
 {
-    if (index==0){ helpTmitText = "Create file page helpTmitText";}
-    else{ helpTmitText = "Create manual helpTmitText";}
+    if (index==0){ helpTmitText = "Create file page helptext";}
+    else{ helpTmitText = "Create manual helptext";}
     foreach(QLineEdit* lineEd, findChildren<QLineEdit*>()) { lineEd->clear(); }
     ui->fileTableWidget->clear();
     ui->tstatusLabel1->setText("");
@@ -222,7 +260,7 @@ void TransmitterAdmin::on_ModifyBtn_clicked()
         ui->tstatusLabel3->setText("Record updated");
         ui->xInputModify->clear();
         ui->yInputModify->clear();
-    } 
+    }
 }
 
 void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
@@ -249,13 +287,13 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
-        helpTmitText = "Modify page helpTmitText";
+        helpTmitText = "Modify page helptext";
         model->setQuery(connection.getIDs("T"));
         ui->tmitDropDown->setModel(model);
         ui->tstatusLabel3->setText("");
     }
     if(index==2){
-        helpTmitText = "Remove page helpTmitText";
+        helpTmitText = "Remove page helptext";
         model->setQuery(connection.getAllOfType("T"));
         model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -265,7 +303,7 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
         ui->tstatusLabel5->setText("");
     }
     if(index==3){
-        helpTmitText = "List page helpTmitText";
+        helpTmitText = "List page helptext";
         model->setQuery(connection.getAllOfType("T"));
         ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView->setModel(model);
@@ -344,3 +382,9 @@ void TransmitterAdmin::on_helpBtn_clicked()
     helpPopUp.exec();
 }
 
+bool TransmitterAdmin::confirmPopUp(QString values) {
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(this, "Confirm column setup", values, QMessageBox::Yes|QMessageBox::No);
+  if (reply == QMessageBox::Yes) {return 0;}
+  else {return 1;}
+}

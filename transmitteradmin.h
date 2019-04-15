@@ -48,6 +48,8 @@ private slots:
 
     void on_helpBtn_clicked();
 
+    bool confirmPopUp(QString values);
+
 private:
     Ui::TransmitterAdmin *ui;
     QString ID_;

@@ -38,18 +38,29 @@ QSqlQuery Database::setupModel(){
 QVariantList Database::addItem(QString type, int radius, double x, double y){
     QSqlQuery queryAdd;
     double power;
-    QVariantList result = checkInterference(x, y, type);
+    QVariantList result;
+
+    if (type.compare("U")==0){
+        result = checkInterference(x, y, "U", nullptr);
+        if (result.length()!=3){ result.push_back(QSqlError("No other points to compare with.").text()); return result;}
+        if(!(result.at(0).toInt()>2)){ result.push_back(QSqlError("Device cannot be here, is in close proximity to another user.").text()); return result;}
+        result.clear();
+    }
+
+    result = checkInterference(x, y, "T", nullptr);
     if (result.length()!=3){ result.push_back(QSqlError("No other points to compare with.").text()); return result;}
 
     if (type.compare("U")==0){
-        if(!(result.at(0).toInt()>6)){ result.push_back(QSqlError("Device cannot join here, is in close proximity to a transmitter.").text()); return result;}
+        if(!(result.at(0).toInt()>6)){ result.push_back(QSqlError("Device cannot be here, is in close proximity to a transmitter.").text()); return result;}
         else if(!(result.at(0).toInt()>15)){ power = 1;} //limited power
         else { power = 4;} //full power
     }
-    else{
-        if(!(result.at(0).toInt()>12)){ result.push_back(QSqlError("Transmitter cannot be built here, is in close proximity to another transmitter.").text()); return result;}
+    else if (type.compare("T")==0){
+        if(!(result.at(0).toInt()>12)){ result.push_back(QSqlError("Transmitter cannot be here, is in close proximity to another transmitter.").text()); return result;}
         else {power = 1000;}
     }
+    else {return result;}
+
     queryAdd.prepare("INSERT INTO `whitespacetable` (`Type`, `Power`, `Radius`, `X`, `Y`) VALUES (?, ?, ?, ?, ?)");
     queryAdd.addBindValue(type);
     queryAdd.addBindValue(power);
@@ -57,6 +68,7 @@ QVariantList Database::addItem(QString type, int radius, double x, double y){
     queryAdd.addBindValue(x);
     queryAdd.addBindValue(y);
     result.push_back(power);
+
     if(queryAdd.exec()){ result.push_back(QSqlError().text()); }
     else{ result.push_back(queryAdd.lastError().text()); }
     return result;
@@ -64,7 +76,16 @@ QVariantList Database::addItem(QString type, int radius, double x, double y){
 
 QVariantList Database::addModifiedItem(QString ID, QString type, double power, int radius, double x, double y){
     QSqlQuery queryAdd;
-    QVariantList result = checkModInterference(x, y, type, ID);
+    QVariantList result;
+
+    if (type.compare("U")==0){
+        result = checkInterference(x, y, "U", nullptr);
+        if (result.length()!=3){ result.push_back(QSqlError("No other points to compare with.").text()); return result;}
+        if(!(result.at(0).toInt()>2)){ result.push_back(QSqlError("Device cannot move here, is in close proximity to another user.").text()); return result;}
+        result.clear();
+    }
+
+    result = checkInterference(x, y, "T", ID);
     if (result.length()!=3){ result.push_back(QSqlError("No other points to compare with.").text()); return result;}
 
     if (type.compare("U")==0){
@@ -83,6 +104,7 @@ QVariantList Database::addModifiedItem(QString ID, QString type, double power, i
     queryAdd.addBindValue(y);
     queryAdd.addBindValue(ID);
     result.push_back(power);
+
     if(queryAdd.exec()){ result.push_back(QSqlError().text()); }
     else{ result.push_back(queryAdd.lastError().text()); }
     return result;
@@ -91,19 +113,7 @@ QVariantList Database::addModifiedItem(QString ID, QString type, double power, i
 //TODO
 QSqlError Database::addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y){
     QSqlQuery queryBulk;
-//    for(int i=0; i<x.length(); i++){}
-//    //double power;
-//    QVariantList canJoin = checkInterference(x, y, type);
-//    if (canJoin.length()!=3){ return QSqlError("No other points to compare with."); }
 
-//    if (type.compare("U")==0){
-//        if(!(canJoin>6)){ return QSqlError("Device cannot join here, is in close proximity to a transmitter."); }
-//        else if(!(canJoin>15)){ power = 1; } //limited power
-//        else { power = 4; } //full power
-//    }
-//    else{
-//        if(!(canJoin>12)){ return QSqlError("Transmitter cannot be built here, is in close proximity to another transmitter."); }
-//    }
 
     queryBulk.prepare("INSERT INTO whitespacetable (`Type`, `Power`, `Radius`, `X`, `Y`) VALUES (?, ?, ?, ?, ?)");
     queryBulk.addBindValue(type);
@@ -154,15 +164,32 @@ QSqlError Database::removeRecords(QStringList rows){
     else{ return queryBulkRemove.lastError(); }
 }
 
-QVariantList Database::checkInterference(double x, double y, QString type){
+QVariantList Database::checkInterference(double x, double y, QString type, QString ID){
     QSqlQuery *query = new QSqlQuery(db);
-    query->prepare("select X, Y from whitespacetable where type='T'");
-    query->exec();
+    if(type.compare("U")==0){
+        if(ID==nullptr){
+            query->prepare("select X, Y from whitespacetable where type='U'");
+            query->exec();
+        }
+        else{
+            query->prepare("select X, Y from whitespacetable where type='U' and not ID='"+ID+"'");
+            query->exec();
+        }
+    }
+    else {
+        if(ID==nullptr){
+            query->prepare("select X, Y from whitespacetable where type='T'");
+            query->exec();
+        }
+        else{
+            query->prepare("select X, Y from whitespacetable where type='T' and not ID='"+ID+"'");
+            query->exec();
+        }
+    }
 
     QList<QVariantList> queryPairs;
 
     while (query->next()) {
-        QSqlRecord queryData = query->record();
         QVariantList temp;
         temp.push_back(query->value(0));
         temp.push_back(query->value(1));
@@ -172,74 +199,14 @@ QVariantList Database::checkInterference(double x, double y, QString type){
     double shortestDist=99999999999;
     QVariantList closestPt;
 
-    if (type.compare("U")==0){
-        for(int i = 0; i<queryPairs.length();i++){
-            double tempDist = distance(x,y,queryPairs.at(i).at(0).toDouble(),queryPairs.at(i).at(1).toDouble());
-            if(tempDist<shortestDist){
-                closestPt.clear();
-                shortestDist = tempDist;
-                closestPt.push_back(shortestDist);
-                closestPt.push_back(queryPairs.at(i).at(0));
-                closestPt.push_back(queryPairs.at(i).at(1));
-            }
-        }
-    }
-    else{
-        for(int i = 0; i<queryPairs.length();i++){
-            double tempDist = distance(x,y,queryPairs.at(i).at(0).toDouble(),queryPairs.at(i).at(1).toDouble());
-            if(tempDist<shortestDist){
-                closestPt.clear();
-                shortestDist = tempDist;
-                closestPt.push_back(shortestDist);
-                closestPt.push_back(queryPairs.at(i).at(0));
-                closestPt.push_back(queryPairs.at(i).at(1));
-            }
-        }
-        //do transmitters care about users already on location, and if so, how?
-    }
-    return closestPt;
-}
-
-QVariantList Database::checkModInterference(double x, double y, QString type, QString ID){
-    QSqlQuery *query = new QSqlQuery(db);
-    query->prepare("select X, Y from whitespacetable where type='T' and not ID='"+ID+"'");
-    query->exec();
-
-    QList<QVariantList> queryPairs;
-
-    while (query->next()) {
-        QSqlRecord queryData = query->record();
-        QVariantList temp;
-        temp.push_back(query->value(0));
-        temp.push_back(query->value(1));
-        queryPairs.push_back(temp);
-    }
-
-    double shortestDist=99999999999;
-    QVariantList closestPt;
-
-    if (type.compare("U")==0){
-        for(int i = 0; i<queryPairs.length();i++){
-            double tempDist = distance(x,y,queryPairs.at(i).at(0).toDouble(),queryPairs.at(i).at(1).toDouble());
-            if(tempDist<shortestDist){
-                closestPt.clear();
-                shortestDist = tempDist;
-                closestPt.push_back(shortestDist);
-                closestPt.push_back(queryPairs.at(i).at(0));
-                closestPt.push_back(queryPairs.at(i).at(1));
-            }
-        }
-    }
-    else{
-        for(int i = 0; i<queryPairs.length();i++){
-            double tempDist = distance(x,y,queryPairs.at(i).at(0).toDouble(),queryPairs.at(i).at(1).toDouble());
-            if(tempDist<shortestDist){
-                closestPt.clear();
-                shortestDist = tempDist;
-                closestPt.push_back(shortestDist);
-                closestPt.push_back(queryPairs.at(i).at(0));
-                closestPt.push_back(queryPairs.at(i).at(1));
-            }
+    for(int i = 0; i<queryPairs.length();i++){
+        double tempDist = distance(x,y,queryPairs.at(i).at(0).toDouble(),queryPairs.at(i).at(1).toDouble());
+        if(tempDist<shortestDist){
+            closestPt.clear();
+            shortestDist = tempDist;
+            closestPt.push_back(shortestDist);
+            closestPt.push_back(queryPairs.at(i).at(0));
+            closestPt.push_back(queryPairs.at(i).at(1));
         }
     }
     return closestPt;

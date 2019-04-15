@@ -23,8 +23,7 @@ public:
     QSqlQuery getRow(QString ID);
     QSqlQuery getAllOfType(QString type);
     QSqlError removeRecords(QStringList rows);
-    QVariantList checkInterference(double x, double y, QString type);
-    QVariantList checkModInterference(double x, double y, QString type, QString ID);
+    QVariantList checkInterference(double x, double y, QString type, QString ID);
     double distance(double x1, double y1, double x2, double y2);
 
 private:

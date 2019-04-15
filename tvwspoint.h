@@ -4,37 +4,44 @@
 #include <QGeoCoordinate>
 #include <QString>
 
-class NavaidsPoint
+class TvwPoint
 {
 public:
-    NavaidsPoint(QString code, double latitude, double longitude, QString country = ""){
-        m_code = code;
-        m_country = country;
+    TvwPoint(QString TVid, double power, int radius, double latitude, double longitude)
+    {
+        m_tvid = TVid;
+        m_power =power;
+        m_radius = radius;
         m_position.setLatitude(latitude);
         m_position.setLongitude(longitude);
         m_position.setAltitude(0.0);
+
     }
 
-    void setPosition(const QGeoCoordinate &c) { //Affectation des nouvelles coordonnées de position
+    void setPosition(const QGeoCoordinate &c) { //assign new coordinates
         m_position = c;
     }
 
     QGeoCoordinate position() const{
-        return m_position; //Lecture des coordonnées de position
+        return m_position;
     }
 
-    QString oaciCode() const {
-        return m_code;
+    QString idCode() const {
+        return m_tvid;
     }
 
     QString countryCode() const {
-        return m_country;
+        return m_type;
     }
 
 private:
     QGeoCoordinate m_position;
-    QString m_code;
-    QString m_country;
+    QString m_tvid;
+    QString m_type;
+    double m_power;
+    int m_radius;
+    double m_x;
+    double m_y;
 };
 
 #endif // TVWSPOINT_H

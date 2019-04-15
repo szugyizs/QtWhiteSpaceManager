@@ -7,19 +7,19 @@
 
 #include <QDebug>
 
-class NavaidsModel : public QAbstractListModel
+class TVModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    NavaidsModel(QObject *parent = Q_NULLPTR):QAbstractListModel(parent){
+    TVModel(QObject *parent = Q_NULLPTR):QAbstractListModel(parent){
     }
-    enum NavaidsRoles {
+    enum TvRoles {
         PositionRole = Qt::UserRole + 1,
         OACICodeRole,
         CountryCodeRole
     };
 
-   Q_INVOKABLE void readFromCSV(const QString &filename){
+    Q_INVOKABLE void readFromCSV(const QString &filename){
         QFile file(filename);
         if(!file.open(QFile::ReadOnly | QFile::Text))
             return;
@@ -27,18 +27,19 @@ public:
         while (!in.atEnd()) {
             QString line = in.readLine();
             QStringList elements = line.split(",");
-            if(elements.count()==4){
-                QString code = elements[0];
-                double latitude = elements[1].toDouble();
-                double longitude = elements[2].toDouble();
-                QString country = elements[3];
-                NavaidsPoint p(code, latitude, longitude, country);
-                addNavaidsPoint(p);
+            if(elements.count()==6){
+                QString Tvid = elements[0];
+                double power = elements[2].toDouble();
+                int radius = elements[3].toInt();
+                double longitude = elements[4].toDouble();
+                double latitude = elements[5].toDouble();
+                TvwPoint p(Tvid, power, radius, latitude, longitude);
+               addPoint(p);
             }
         }
     }
 
-    void addNavaidsPoint(const NavaidsPoint &point){
+    void addPoint(const TvwPoint &point){
         beginInsertRows(QModelIndex(), rowCount(), rowCount());
         mPoints << point;
         endInsertRows();
@@ -53,11 +54,11 @@ public:
         if (index.row() < 0 || index.row() >= mPoints.count())
             return QVariant();
 
-        const NavaidsPoint &point = mPoints[index.row()];
+        const TvwPoint &point = mPoints[index.row()];
         if (role == PositionRole)
             return QVariant::fromValue(point.position());
         else if (role == OACICodeRole)
-            return point.oaciCode();
+            return point.idCode();
         else if (role == CountryCodeRole)
             return point.countryCode();
         return QVariant();
@@ -67,12 +68,12 @@ protected:
     QHash<int, QByteArray> roleNames() const {
         QHash<int, QByteArray> roles;
         roles[PositionRole] = "position";
-        roles[OACICodeRole] = "oaci";
-        roles[CountryCodeRole] = "country";
+        roles[OACICodeRole] = "id";
+        roles[CountryCodeRole] = "power";
         return roles;
     }
 private:
-    QList<NavaidsPoint> mPoints;
+    QList<TvwPoint> mPoints;
 };
 
 #endif // TVMODEL_H

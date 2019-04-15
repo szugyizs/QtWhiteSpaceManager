@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>mapdata.qml</file>
         <file>marker.png</file>
+        <file>arqiva_transmitters_final.csv</file>
+        <file>testusers.csv</file>
     </qresource>
 </RCC>
