@@ -21,7 +21,6 @@ UserAdmin::~UserAdmin()
     cout << "User dialog object destroyed." << endl;
 }
 
-QList<QStringList> columns_2;
 QString helpUserText = "Create tab helptext.";
 
 CreateTab_2::CreateTab_2(QWidget *parent) : QWidget(parent) { }
@@ -34,7 +33,7 @@ void UserAdmin::on_addBtnManual_2_clicked()
 {
     double xin = ui->xInput_2->text().toDouble();
     double yin = ui->yInput_2->text().toDouble();
-    int rin = ui->radiusInput->text().toInt();
+    int rin = 1;
     //User *user = new User(rin, xin, yin);
 
     Database connection;
@@ -48,7 +47,6 @@ void UserAdmin::on_addBtnManual_2_clicked()
     }
     else{
         QMessageBox::information(this,"Record added","Successfully added to the database");
-        ui->radiusInput->setText("");
         ui->xInput_2->setText("");
         ui->yInput_2->setText("");
         ui->ustatusLabel2->setText("Record added");
@@ -56,14 +54,13 @@ void UserAdmin::on_addBtnManual_2_clicked()
     addCheck.pop_back();
     ui->assignedPowLbl->setText("The user can transmit on "+addCheck.last().toString()+"W.");
     addCheck.pop_back();
-    ui->tmitDistLbl->setText("It is "+addCheck.first().toString()+" units away");
+    ui->tmitDistLbl->setText("It is "+addCheck.first().toString()+" miles away");
     addCheck.pop_front();
     ui->tmitDistLbl_2->setText("It is located at ("+addCheck.first().toString()+","+addCheck.last().toString()+").");
 }
 
 void UserAdmin::on_clearBtnCreate_2_clicked()
 {
-    ui->radiusInput->setText("");
     ui->xInput_2->setText("");
     ui->yInput_2->setText("");
     ui->ustatusLabel2->setText("");
@@ -77,7 +74,7 @@ void UserAdmin::on_ModifyBtn_2_clicked()
     Database connection;
     QString id = ui->userDropDown->currentText();
     double pin = ui->powerInputModify_2->text().toDouble();
-    int rin = ui->radiusInputModify->text().toInt();
+    int rin = 1;
     double xin = ui->xInputModify_2->text().toDouble();
     double yin = ui->yInputModify_2->text().toDouble();
     QString type = "U";
@@ -92,7 +89,6 @@ void UserAdmin::on_ModifyBtn_2_clicked()
     }
     else{
         QMessageBox::information(this,"Record added","Successfully modified to the database");
-        ui->radiusInputModify->setText("");
         ui->powerInputModify_2->setText("");
         ui->xInputModify_2->setText("");
         ui->yInputModify_2->setText("");
@@ -101,7 +97,7 @@ void UserAdmin::on_ModifyBtn_2_clicked()
         addCheck.pop_back();
         ui->assignedPowLbl_2->setText("The user can transmit on "+addCheck.last().toString()+"W.");
         addCheck.pop_back();
-        ui->tmitDistLbl_3->setText("It is "+addCheck.first().toString()+" units away");
+        ui->tmitDistLbl_3->setText("It is "+addCheck.first().toString()+" miles away");
         addCheck.pop_front();
         ui->tmitDistLbl_4->setText("It is located at ("+addCheck.first().toString()+","+addCheck.last().toString()+").");
     }
@@ -117,7 +113,6 @@ void UserAdmin::on_userDropDown_currentIndexChanged(const QString &arg1) {
     if (query.exec()){
         while(query.next()){
             ui->powerInputModify_2->setText(query.value(2).toString());
-            ui->radiusInputModify->setText(query.value(3).toString());
             ui->xInputModify_2->setText(query.value(4).toString());
             ui->yInputModify_2->setText(query.value(5).toString());
         }
@@ -137,7 +132,6 @@ void UserAdmin::on_tabWidget_2_currentChanged(int index)
     if(index==1){
         helpUserText="Modify tab helpUserText";
         ui->powerInputModify_2->clear();
-        ui->radiusInputModify->clear();
         ui->xInputModify_2->clear();
         ui->yInputModify_2->clear();
 
@@ -175,12 +169,12 @@ void UserAdmin::on_uExportBtn_clicked()
         for (int j = 0; j < columns; j++) {
 
             outdata += ui->uListView->model()->data(ui->uListView->model()->index(i,j)).toString();
-            outdata += ", ";
+            if (j!=columns-1){outdata += ", ";}
         }
         outdata += "\n";
     }
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save User Devices To File"), "C://","CSV Files(*.csv);;Text Files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save User Devices To File"), "C://","CSV Files(*.csv);;All files (*.*)");
     QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&file);

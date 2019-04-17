@@ -26,7 +26,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget_2">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="CreateTab_2">
        <attribute name="title">
@@ -93,20 +93,6 @@
            </item>
            <item>
             <widget class="QLineEdit" name="yInput_2"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="4,6">
-           <item>
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Radius</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="radiusInput"/>
            </item>
           </layout>
          </item>
@@ -297,20 +283,6 @@
            </item>
            <item>
             <widget class="QLineEdit" name="powerInputModify_2"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="4,6">
-           <item>
-            <widget class="QLabel" name="label_16">
-             <property name="text">
-              <string>Radius</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="radiusInputModify"/>
            </item>
           </layout>
          </item>

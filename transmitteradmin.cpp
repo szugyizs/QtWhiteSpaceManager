@@ -21,13 +21,13 @@ TransmitterAdmin::~TransmitterAdmin()
     cout << "Transmitter dialog object destroyed." << endl;
 }
 
-QList<QStringList> columns;
-QString helpTmitText = "Create file tab helptext.";
-
 CreateTab::CreateTab(QWidget *parent) : QWidget(parent) { }
 ModifyTab::ModifyTab(QWidget *parent) : QWidget(parent) { }
 RemoveTab::RemoveTab(QWidget *parent) : QWidget(parent) { }
 ListTab::ListTab(QWidget *parent) : QWidget(parent) { }
+
+QList<QStringList> columns;
+QString helpTmitText = "Create file tab helptext.";
 
 //-------------------Create Tab----------------------
 void TransmitterAdmin::on_addBtnManual_clicked()
@@ -86,7 +86,7 @@ void TransmitterAdmin::on_browseFile_clicked()
         ui->tstatusLabel1->setText("Error loading file");
         return;
     }
-
+    int i = 0;
     do{
         if (firstCheck){
             line = ipLine.readLine();
@@ -98,11 +98,18 @@ void TransmitterAdmin::on_browseFile_clicked()
                 QString current = hIt.next();
                 bool isNum = false;
                 current.toDouble(&isNum);
-                if(isNum){ toHeader = false; }
+                if(isNum){
+                    int temp = headers.count();
+                    headers.clear();
+                    for(int j=0; j<temp; j++){
+                        headers<<(QString::number(j+1));
+                    }
+                    toHeader = false;
+                }
             }
             if (!toHeader){
                 columns<<line.split(',');
-                if (columns.count()!=numOfCols){
+                if (columns[0].size()!=numOfCols){
                     QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
                     ui->tstatusLabel1->setText("Error loading file");
                     return;
@@ -112,17 +119,19 @@ void TransmitterAdmin::on_browseFile_clicked()
         }
         else{
             line = ipLine.readLine();
-            columns << line.split(',');
-            if (columns.count()!=numOfCols){
-                QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
-                ui->tstatusLabel1->setText("Error loading file");
-                return;
-
+            if (!(line == "")){
+                columns << line.split(',');
+                if (columns[i].size()!=numOfCols){
+                    QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
+                    ui->tstatusLabel1->setText("Error loading file");
+                    return;
+                }
+                i++;
             }
         }
     } while (!line.isNull());
 
-    ui->fileTableWidget->setRowCount(columns.size()-1);
+    ui->fileTableWidget->setRowCount(columns.size());
     ui->fileTableWidget->setColumnCount(columns[0].size());
     ui->fileTableWidget->setSelectionMode(QAbstractItemView::NoSelection);
     for (int i=0; i<headers.length(); i++){ ui->fileTableWidget->setHorizontalHeaderItem(i,new QTableWidgetItem(headers.at(i)));}
@@ -145,40 +154,40 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     QVariantList radiusList;
     QString confirmMsg;
 
-//    switch(columns.size()){
-//    case 2:
-//        confirmMsg="Are the columns: X , Y; in this order?";
-//        if (confirmPopUp()){
-//            //add whatever
-//        }
-//        else {
-//            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
-//            ui->tstatusLabel1->setText("Invalid types of columns");
-//            return;
-//        }
-//        break;
-//    case 3:
-//        //switch
-//        break;
-//    case 4:
-//        //switch
-//        break;
-//    case 5:
-//        confirmMs="Are the columns: Type, Power, Radius, X , Y; in this order?";
-//        if (confirmPopUp()){
-//            //add whatever
-//        }
-//        else {
-//            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
-//            ui->tstatusLabel1->setText("Invalid types of columns");
-//            return;
-//        }
-//        break;
-//    default:
-//        QMessageBox::critical(this,"Error","Invalid number of columns ");
-//        ui->tstatusLabel1->setText("Invalid number of columns");
-//        return;
-//    }
+    //    switch(columns.size()){
+    //    case 2:
+    //        confirmMsg="Are the columns: X , Y; in this order?";
+    //        if (confirmPopUp()){
+    //            //add whatever
+    //        }
+    //        else {
+    //            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
+    //            ui->tstatusLabel1->setText("Invalid types of columns");
+    //            return;
+    //        }
+    //        break;
+    //    case 3:
+    //        //switch
+    //        break;
+    //    case 4:
+    //        //switch
+    //        break;
+    //    case 5:
+    //        confirmMs="Are the columns: Type, Power, Radius, X , Y; in this order?";
+    //        if (confirmPopUp()){
+    //            //add whatever
+    //        }
+    //        else {
+    //            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
+    //            ui->tstatusLabel1->setText("Invalid types of columns");
+    //            return;
+    //        }
+    //        break;
+    //    default:
+    //        QMessageBox::critical(this,"Error","Invalid number of columns ");
+    //        ui->tstatusLabel1->setText("Invalid number of columns");
+    //        return;
+    //    }
 
 
     for (int i = 0; i<columns.size()-1; ++i){
@@ -205,18 +214,28 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     }
 
     Database connection;
+    QVariantList addBulkCheck = connection.addBulk("T", pin, radiusList, xin, yin);
+    QString cerror;
+    for(int i=0; i<addBulkCheck.length(); i++){
+        cerror.append(addBulkCheck.at(i).toString());
+    }
 
-    QSqlError cerror = connection.addBulk("T", pin, radiusList, xin, yin);
-    if (cerror.type() != QSqlError::NoError) {
-        QMessageBox::critical(this,"Error","Unable to add to the database: "+cerror.text()+" ");
-        ui->tstatusLabel1->setText("Error loading database");
+    bool isNum = false;
+    cerror.toDouble(&isNum);
+
+
+    QString cerror2 = addBulkCheck.last().toString();
+
+    if ((cerror2 != ""&&cerror2 != " ") && (addBulkCheck.length()==1 && !isNum || addBulkCheck.length()==0)) {
+        QMessageBox::critical(this,"Error","Unable to add to the database: "+addBulkCheck.last().toString());
+        ui->tstatusLabel1->setText("Error adding to database");
+        return;
     }
     else{
-        QMessageBox::information(this,"Records added","Successfully added to the database");
+        QMessageBox::information(this,"Record added","Successfully added rows "+cerror);
         ui->fileTableWidget->clear();
-        ui->tstatusLabel1->setText("Records added");
+        ui->tstatusLabel1->setText("Record added");
     }
-
 }
 
 void TransmitterAdmin::on_toolBox_currentChanged(int index)
@@ -320,14 +339,13 @@ void TransmitterAdmin::on_tExportBtn_clicked()
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
-
             outdata += ui->ListTableView->model()->data(ui->ListTableView->model()->index(i,j)).toString();
-            outdata += ", ";
+            if (j!=columns-1){outdata += ", ";}
         }
         outdata += "\n";
     }
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save WSDB To File"), "C://","CSV Files(*.csv);;Text Files (*.txt);;All files (*.*)");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save WSDB To File"), "C://","CSV Files(*.csv);;All files (*.*)");
     QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&file);
@@ -361,7 +379,7 @@ void TransmitterAdmin::on_removeBtn_clicked()
             QMessageBox::information(this,"Success","Successfully removed records from database");
             ui->tstatusLabel5->setText("Successfully removed ");
             QSqlQueryModel *model = new QSqlQueryModel();
-            model->setQuery(connection.getAllOfType("U"));
+            model->setQuery(connection.getAllOfType("T"));
             ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
             ui->ListTableView_2->setModel(model);
         }
@@ -383,8 +401,8 @@ void TransmitterAdmin::on_helpBtn_clicked()
 }
 
 bool TransmitterAdmin::confirmPopUp(QString values) {
-  QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(this, "Confirm column setup", values, QMessageBox::Yes|QMessageBox::No);
-  if (reply == QMessageBox::Yes) {return 0;}
-  else {return 1;}
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm column setup", values, QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {return 0;}
+    else {return 1;}
 }

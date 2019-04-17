@@ -31,12 +31,10 @@ int main(int argc, char *argv[])
     TVModel model1;
     TVModel model2;
 
-    QQmlApplicationEngine engine,engine1;
+    QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("TVModel1", &model1);
     engine.rootContext()->setContextProperty("TVModel2", &model2);
     engine.load(QUrl(QLatin1String("qrc:/mapdata.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
 
     return app.exec();
 }

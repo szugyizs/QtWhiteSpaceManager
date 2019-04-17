@@ -1,8 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>mapdata.qml</file>
-        <file>marker.png</file>
-        <file>arqiva_transmitters_final.csv</file>
-        <file>testusers.csv</file>
+        <file>marker1.png</file>
+        <file>marker2.png</file>
     </qresource>
 </RCC>

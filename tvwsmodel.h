@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QFile>
 #include <QTextStream>
+#include <QQmlEngine>
 
 #include <QDebug>
 
@@ -34,7 +35,7 @@ public:
                 double longitude = elements[4].toDouble();
                 double latitude = elements[5].toDouble();
                 TvwPoint p(Tvid, power, radius, latitude, longitude);
-               addPoint(p);
+                addPoint(p);
             }
         }
     }
@@ -63,6 +64,8 @@ public:
             return point.countryCode();
         return QVariant();
     }
+
+//    Q_INVOKABLE void removeItems() const{ }
 
 protected:
     QHash<int, QByteArray> roleNames() const {
