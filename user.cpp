@@ -2,8 +2,8 @@
 #include <iostream>
 using namespace std;
 
-User::User() { cout << "User object created." << endl;};
-User::User(int rad, double x, double y, QString ID, double pow) : Device (rad, x, y, ID, pow)
+User::User() { cout << "User object created." << endl;}
+User::User(QString ID, double pow, int rad, double x, double y) : Device (ID, pow, rad, x, y)
 {
     radius_ = rad;
     x_ = x;
@@ -12,17 +12,17 @@ User::User(int rad, double x, double y, QString ID, double pow) : Device (rad, x
     power_ = pow;
     type_ = "U";
 }
-User::User(int rad, double x, double y, QString ID) : Device (rad, x, y)
+User::User(double x, double y, QString ID) : Device (x, y)
 {
-    radius_ = rad;
+    radius_ = uR_;
     x_ = x;
     y_ = y;
     ID_ = ID;
     type_ = "U";
 }
-User::User(int rad, double x, double y) : Device (rad, x, y)
+User::User(double x, double y) : Device (x, y)
 {
-    radius_ = rad;
+    radius_ = uR_;
     x_ = x;
     y_ = y;
     type_ = "U";

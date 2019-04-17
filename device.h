@@ -5,9 +5,8 @@
 class Device{
 public:
     Device();
-    virtual ~Device();
-    Device(int rad, double x, double y, QString tID, double pow);
-    Device(int rad, double x, double y);
+    ~Device();
+    Device(QString ID, double pow, int rad, double x, double y);
     Device(double x, double y);
 
     double getX();
@@ -27,11 +26,12 @@ protected:
     QString ID_;
     QString type_;
     double power_;
+    int radius_;
     double x_;
     double y_;
+
+    int uR_ = 1;
     int tR_ = 6;
     double tP_ = 1000;
-    double D_;
-    int radius_;
 };
 #endif

@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
+import QtQuick.Dialogs 1.0
 import QtPositioning 5.5
 import QtLocation 5.6
 
@@ -112,6 +113,20 @@ Window {
                 //TVModel1.removeItems? some clear function
                 TVModel1.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\arqiva_transmitters_final.csv")
             }
+//            FileDialog {
+//                id: fileDialog
+//                title: "Please choose a file"
+//                folder: shortcuts.home
+//                onAccepted: {
+//                    console.log("You chose: " + fileDialog.fileUrls)
+//                    Qt.quit()
+//                }
+//                onRejected: {
+//                    console.log("Canceled")
+//                    Qt.quit()
+//                }
+//                Component.onCompleted: visible = true
+//            }
         }
 
         MapItemView {

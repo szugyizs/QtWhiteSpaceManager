@@ -4,21 +4,13 @@ using namespace std;
 
 Device::Device() { cout << "Device object created." << endl; }
 
-Device::Device(int rad, double x, double y, QString ID, double pow)
+Device::Device(QString ID, double pow, int rad, double x, double y)
 {
     radius_ = rad;
     x_ = x;
     y_ = y;
     ID_ = ID;
     power_ = pow;
-    cout << "Device object created." << endl;
-}
-
-Device::Device(int rad, double x, double y)
-{
-    x_ = x;
-    y_ = y;
-    radius_ = rad;
     cout << "Device object created." << endl;
 }
 

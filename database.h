@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include "device.h"
 
 class Database : public  QSqlDatabase {
 public:
@@ -14,8 +15,8 @@ public:
     QSqlError setupConnection(QString host, QString dbname, QString uname, int port, QString pw, QWidget *window);
     void closeConnection(QWidget *window);
     QSqlQuery setupModel();
-    QVariantList addItem(QString type, int radius, double x, double y);
-    QVariantList addModifiedItem(QString ID, QString type, double power, int radius, double x, double y);
+    QVariantList addItem(Device *d);
+    QVariantList addModifiedItem(Device *d);
     QString createID(QString type);
     QVariantList addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y);
     QSqlQuery getIDs(QString type);

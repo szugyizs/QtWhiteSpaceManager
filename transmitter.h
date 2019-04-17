@@ -3,11 +3,11 @@
 #include "device.h"
 #include <QString>
 
-class Transmitter : public virtual Device {
+class Transmitter : public Device {
 public:
     Transmitter();
     ~Transmitter();
-    Transmitter(int rad, double x, double y, QString id, double pow);
+    Transmitter(QString id, double pow, int rad, double x, double y);
     Transmitter(double x, double y, QString ID);
     Transmitter(double x, double y);
 };

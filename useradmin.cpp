@@ -33,11 +33,10 @@ void UserAdmin::on_addBtnManual_2_clicked()
 {
     double xin = ui->xInput_2->text().toDouble();
     double yin = ui->yInput_2->text().toDouble();
-    int rin = 1;
-    //User *user = new User(rin, xin, yin);
+    User *user = new User(xin, yin);
 
     Database connection;
-    QVariantList addCheck = connection.addItem("U", rin, xin, yin);
+    QVariantList addCheck = connection.addItem(user);
 
     QString cerror = addCheck.last().toString();
     if (cerror != ""&&cerror != " ") {
@@ -73,13 +72,11 @@ void UserAdmin::on_ModifyBtn_2_clicked()
 {
     Database connection;
     QString id = ui->userDropDown->currentText();
-    double pin = ui->powerInputModify_2->text().toDouble();
-    int rin = 1;
     double xin = ui->xInputModify_2->text().toDouble();
     double yin = ui->yInputModify_2->text().toDouble();
-    QString type = "U";
+    User *user = new User(xin, yin, id);
 
-    QVariantList addCheck = connection.addModifiedItem(id, "U", pin, rin, xin, yin); //change to Device type
+    QVariantList addCheck = connection.addModifiedItem(user); //change to Device type
 
     QString cerror = addCheck.last().toString();
     if (cerror != ""&&cerror != " ") {

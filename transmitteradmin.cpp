@@ -32,13 +32,12 @@ QString helpTmitText = "Create file tab helptext.";
 //-------------------Create Tab----------------------
 void TransmitterAdmin::on_addBtnManual_clicked()
 {
-    int xin = ui->xInput->text().toInt();
-    int yin = ui->yInput->text().toInt();
-    //Transmitter *transmitter = new Transmitter(xin, yin);
-    int rin = 6;
+    double xin = ui->xInput->text().toDouble();
+    double yin = ui->yInput->text().toDouble();
+    Transmitter *transmitter = new Transmitter(xin, yin);
 
     Database connection;
-    QVariantList addCheck = connection.addItem("T", rin, xin, yin);
+    QVariantList addCheck = connection.addItem(transmitter);
 
     QString cerror = addCheck.last().toString();
     if (cerror != ""&&cerror != " ") {
@@ -92,6 +91,14 @@ void TransmitterAdmin::on_browseFile_clicked()
             line = ipLine.readLine();
             headers << line.split(',');
             numOfCols = headers.count();
+            if (numOfCols!=2){
+                QMessageBox::critical(this,"Error","Invalid number of columns ");
+                ui->tstatusLabel1->setText("Invalid number of columns");
+                ui->fileTableWidget->clear();
+                ui->fileTableWidget->setRowCount(0);
+                ui->fileTableWidget->setColumnCount(0);
+                return;
+            }
 
             QListIterator<QString> hIt(headers);
             while (hIt.hasNext()) {
@@ -145,7 +152,6 @@ void TransmitterAdmin::on_browseFile_clicked()
     ui->addAllBtn->setEnabled(true);
 }
 
-//TODO
 void TransmitterAdmin::on_addAllBtn_clicked()
 {
     QVariantList xin;
@@ -154,65 +160,41 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     QVariantList radiusList;
     QString confirmMsg;
 
-    //    switch(columns.size()){
-    //    case 2:
-    //        confirmMsg="Are the columns: X , Y; in this order?";
-    //        if (confirmPopUp()){
-    //            //add whatever
-    //        }
-    //        else {
-    //            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
-    //            ui->tstatusLabel1->setText("Invalid types of columns");
-    //            return;
-    //        }
-    //        break;
-    //    case 3:
-    //        //switch
-    //        break;
-    //    case 4:
-    //        //switch
-    //        break;
-    //    case 5:
-    //        confirmMs="Are the columns: Type, Power, Radius, X , Y; in this order?";
-    //        if (confirmPopUp()){
-    //            //add whatever
-    //        }
-    //        else {
-    //            QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
-    //            ui->tstatusLabel1->setText("Invalid types of columns");
-    //            return;
-    //        }
-    //        break;
-    //    default:
-    //        QMessageBox::critical(this,"Error","Invalid number of columns ");
-    //        ui->tstatusLabel1->setText("Invalid number of columns");
-    //        return;
-    //    }
-
-
-    for (int i = 0; i<columns.size()-1; ++i){
-        for (int j = 0; j<columns[i].size(); ++j){
-            switch(j) {
-            case 0 :
-                xin<<(columns[i][j]);
-                break;
-            case 1 :
-                yin<<(columns[i][j]);
-                break;
-            default :
-                QMessageBox::critical(this,"Error","Invalid item ");
-                ui->tstatusLabel1->setText("Invalid item");
-                return;
+    confirmMsg="Are the columns: X , Y; in this order?";
+    if (confirmPopUp(confirmMsg)==0){
+        for (int i = 0; i<columns.size(); ++i){
+            for (int j = 0; j<columns[i].size(); ++j){
+                switch(j) {
+                case 0 :
+                    xin<<(columns[i][j]);
+                    break;
+                case 1 :
+                    yin<<(columns[i][j]);
+                    break;
+                default :
+                    QMessageBox::critical(this,"Error","Invalid item ");
+                    ui->tstatusLabel1->setText("Invalid item");
+                    ui->fileTableWidget->clear();
+                    ui->fileTableWidget->setRowCount(0);
+                    ui->fileTableWidget->setColumnCount(0);
+                    return;
+                }
             }
         }
-        //      Transmitter *transmitter = new Transmitter( xin.last().toDouble(), yin.at(j).toInt(), pin.at(j).toInt()); //?? fix TODO
+        for(int i = 0; i<xin.length(); i++){
+            pin<<(4);
+            radiusList<<(6);
+        }
     }
-
-    for(int i = 0; i<xin.length(); i++){
-        pin<<(4);
-        radiusList<<(6);
+    else {
+        QMessageBox::critical(this,"Error","Invalid column structure. Restructure file and load again.");
+        ui->tstatusLabel1->setText("Invalid types of columns");
+        ui->fileTableWidget->clear();
+        ui->fileTableWidget->setRowCount(0);
+        ui->fileTableWidget->setColumnCount(0);
+        return;
     }
-
+    //list of transmitters? // Transmitter *transmitter = new Transmitter(xin, yin);
     Database connection;
     QVariantList addBulkCheck = connection.addBulk("T", pin, radiusList, xin, yin);
     QString cerror;
@@ -222,7 +204,6 @@ void TransmitterAdmin::on_addAllBtn_clicked()
 
     bool isNum = false;
     cerror.toDouble(&isNum);
-
 
     QString cerror2 = addBulkCheck.last().toString();
 
@@ -234,6 +215,8 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     else{
         QMessageBox::information(this,"Record added","Successfully added rows "+cerror);
         ui->fileTableWidget->clear();
+        ui->fileTableWidget->setRowCount(0);
+        ui->fileTableWidget->setColumnCount(0);
         ui->tstatusLabel1->setText("Record added");
     }
 }
@@ -260,13 +243,11 @@ void TransmitterAdmin::on_ModifyBtn_clicked()
 {
     Database connection;
     QString id = ui->tmitDropDown->currentText();
-    QString type = "T";
-    double pin = 1000;
     double xin = ui->xInputModify->text().toDouble();
     double yin = ui->yInputModify->text().toDouble();
-    int rin = 6;
+    Transmitter *transmitter = new Transmitter(xin, yin, id);
 
-    QVariantList addCheck = connection.addModifiedItem(id, type, pin, rin, xin, yin);
+    QVariantList addCheck = connection.addModifiedItem(transmitter);
 
     QString cerror = addCheck.last().toString();
     if (cerror != ""&&cerror != " ") {
@@ -400,7 +381,7 @@ void TransmitterAdmin::on_helpBtn_clicked()
     helpPopUp.exec();
 }
 
-bool TransmitterAdmin::confirmPopUp(QString values) {
+int TransmitterAdmin::confirmPopUp(QString values) {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirm column setup", values, QMessageBox::Yes|QMessageBox::No);
     if (reply == QMessageBox::Yes) {return 0;}

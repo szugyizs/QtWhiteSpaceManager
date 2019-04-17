@@ -38,10 +38,15 @@ QSqlQuery Database::setupModel(){
     return *query;
 }
 
-QVariantList Database::addItem(QString type, int radius, double x, double y){
+QVariantList Database::addItem(Device *d){
     QSqlQuery queryAdd;
     double power;
     QVariantList result;
+
+    QString type = d->getType();
+    int radius = d->getRadius();
+    double x = d->getX();
+    double y = d->getY();
 
     if (type.compare("U")==0){
         result = checkInterference(x, y, "U", nullptr);
@@ -81,9 +86,16 @@ QVariantList Database::addItem(QString type, int radius, double x, double y){
     return result;
 }
 
-QVariantList Database::addModifiedItem(QString ID, QString type, double power, int radius, double x, double y){
+QVariantList Database::addModifiedItem(Device *d){
     QSqlQuery queryAdd;
     QVariantList result;
+
+    QString type = d->getType();
+    double power = d->getPower();
+    int radius = d->getRadius();
+    double x = d->getX();
+    double y = d->getY();
+    QString ID = d->getID();
 
     if (type.compare("U")==0){
         result = checkInterference(x, y, "U", nullptr);
@@ -115,7 +127,6 @@ QVariantList Database::addModifiedItem(QString ID, QString type, double power, i
     return result;
 }
 
-//TODO
 QVariantList Database::addBulk(QString type, QVariantList power, QVariantList radius, QVariantList x, QVariantList y){
     QSqlQuery queryBulk;
     QVariantList result;

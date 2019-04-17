@@ -3,12 +3,12 @@
 #include "device.h"
 #include <QString>
 
-class User : public virtual Device {
+class User : public Device {
 public:
     User();
     ~User();
-    User(int rad, double x, double y, QString ID, double pow);
-    User(int rad, double x, double y, QString ID);
-    User(int rad, double x, double y);
+    User(QString ID, double pow, int rad, double x, double y);
+    User(double x, double y, QString ID);
+    User(double x, double y);
 };
 #endif
