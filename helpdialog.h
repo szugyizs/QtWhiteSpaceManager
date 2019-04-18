@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module HelpDialog.h
+ * Header file for HelpDialog class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 #ifndef HELPDIALOG_H
 #define HELPDIALOG_H
 

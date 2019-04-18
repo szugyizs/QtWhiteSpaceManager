@@ -3,5 +3,6 @@
         <file>mapdata.qml</file>
         <file>marker1.png</file>
         <file>marker2.png</file>
+        <file>sysmgr.qml</file>
     </qresource>
 </RCC>

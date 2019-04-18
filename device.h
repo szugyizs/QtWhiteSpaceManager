@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module Device.h
+ * Header file for Device class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 #ifndef DEVICE_H
 #define DEVICE_H
 #include <QString>
@@ -30,8 +41,8 @@ protected:
     double x_;
     double y_;
 
-    int uR_ = 1;
-    int tR_ = 6;
-    double tP_ = 1000;
+    const int uR_ = 1;
+    const int tR_ = 6;
+    const double tP_ = 1000;
 };
 #endif

@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module Database.h
+ * Header file of Database class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 #ifndef DATABASE_H
 #define DATABASE_H
 

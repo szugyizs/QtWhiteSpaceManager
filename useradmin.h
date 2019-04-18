@@ -1,3 +1,15 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module UserAdmin.h
+ * The header file for the UserAdmin class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
+
 #ifndef USERADMIN_H
 #define USERADMIN_H
 

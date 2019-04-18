@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module TransmitterAdmin.h
+ * Header file for TransmitterAdmin class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 #ifndef TRANSMITTERADMIN_H
 #define TRANSMITTERADMIN_H
 

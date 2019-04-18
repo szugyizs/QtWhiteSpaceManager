@@ -1,3 +1,15 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module User.h
+ * Header file for the User class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
+
 #ifndef USER_H
 #define USER_H
 #include "device.h"

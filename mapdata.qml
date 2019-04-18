@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module mapdata.qml
+ * Source file of the Quick Map Widget.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 import QtQuick 2.6
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.0
@@ -19,7 +30,7 @@ Window {
             name: "osm"
         }
 
-        center {
+        center { //Glasgow
             latitude: 55.8642
             longitude: -4.2518
         }
@@ -28,10 +39,10 @@ Window {
         MapItemView {
             id: miv1
             model:TVModel1
-            delegate: MapCircle{
+            delegate: MapCircle{ //transmitter radius
                 id: mc1
                 center: position
-                radius: 9656
+                radius: 9656            //6 mile radius in metres
                 color: 'green'
                 opacity: 0.5
                 border.width: 1
@@ -65,7 +76,7 @@ Window {
         MapItemView {
             id: miv1m
             model:TVModel1
-            delegate: MapQuickItem {
+            delegate: MapQuickItem {    //transmitter marker
                 id: marker1
                 anchorPoint.x: markerImg1.width/2
                 anchorPoint.y: markerImg1.height
@@ -110,32 +121,17 @@ Window {
             anchors.left: parent.left
             text: "Load transmitters"
             onClicked: {
-                //TVModel1.removeItems? some clear function
-                TVModel1.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\arqiva_transmitters_final.csv")
+                TVModel1.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\transmitterlist.csv")
             }
-//            FileDialog {
-//                id: fileDialog
-//                title: "Please choose a file"
-//                folder: shortcuts.home
-//                onAccepted: {
-//                    console.log("You chose: " + fileDialog.fileUrls)
-//                    Qt.quit()
-//                }
-//                onRejected: {
-//                    console.log("Canceled")
-//                    Qt.quit()
-//                }
-//                Component.onCompleted: visible = true
-//            }
         }
 
         MapItemView {
             id: miv2
             model:TVModel2
-            delegate: MapCircle{
+            delegate: MapCircle{        //user radius
                 id: mc2
                 center: position
-                radius: 804
+                radius: 1608            //1 mile radius in metres
                 color: 'red'
                 opacity: 0.5
                 border.width: 1
@@ -169,7 +165,7 @@ Window {
         MapItemView {
             id: miv2a
             model:TVModel2
-            delegate: MapQuickItem {
+            delegate: MapQuickItem {        //user marker
                 id: marker2
                 anchorPoint.x: markerImg2.width/2
                 anchorPoint.y: markerImg2.height
@@ -214,8 +210,7 @@ Window {
             anchors.right: parent.right
             text: "Load users"
             onClicked: {
-                //some clear function
-                TVModel2.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\testusers.csv")
+                TVModel2.readFromCSV("C:\\Users\\Zsuzsi\\Desktop\\userlist.csv")
             }
         }
     }

@@ -1,3 +1,13 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module TVWSPoint.h
+ * The TVWSPoint class.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
 #ifndef TVWSPOINT_H
 #define TVWSPOINT_H
 
@@ -7,7 +17,7 @@
 class TvwPoint
 {
 public:
-    TvwPoint(QString TVid, double power, int radius, double latitude, double longitude)
+    TvwPoint(QString TVid, double power, int radius, double latitude, double longitude) //constructor to set the longitude ,latidude
     {
         m_tvid = TVid;
         m_power =power;
@@ -22,12 +32,12 @@ public:
         m_position = c;
     }
 
-    QGeoCoordinate position() const{
+    QGeoCoordinate position() const{            //query the position
         return m_position;
     }
 
     QString idCode() const {
-        return m_tvid;
+        return m_tvid;                            // this function return the id numer that i set by the constructor
     }
 
     QString countryCode() const {

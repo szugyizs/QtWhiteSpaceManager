@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
-    <height>554</height>
+    <width>547</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>9</x>
      <y>6</y>
      <width>531</width>
-     <height>511</height>
+     <height>501</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -38,7 +38,7 @@
           <x>10</x>
           <y>20</y>
           <width>501</width>
-          <height>441</height>
+          <height>421</height>
          </rect>
         </property>
         <property name="currentIndex">
@@ -50,7 +50,7 @@
            <x>0</x>
            <y>0</y>
            <width>501</width>
-           <height>379</height>
+           <height>359</height>
           </rect>
          </property>
          <attribute name="label">
@@ -76,6 +76,13 @@
               </widget>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Warning: Only files with an X coordinate and a Y coordinate value allowed.</string>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QTableWidget" name="fileTableWidget"/>
@@ -133,7 +140,7 @@
            <x>0</x>
            <y>0</y>
            <width>501</width>
-           <height>379</height>
+           <height>359</height>
           </rect>
          </property>
          <attribute name="label">
@@ -145,7 +152,7 @@
             <x>1</x>
             <y>5</y>
             <width>491</width>
-            <height>311</height>
+            <height>291</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -201,7 +208,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>320</y>
+            <y>300</y>
             <width>491</width>
             <height>51</height>
            </rect>
@@ -275,7 +282,7 @@
           <x>20</x>
           <y>90</y>
           <width>491</width>
-          <height>311</height>
+          <height>291</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="modifyLayout">
@@ -324,7 +331,7 @@
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>410</y>
+          <y>380</y>
           <width>491</width>
           <height>51</height>
          </rect>
@@ -420,7 +427,7 @@
           <x>5</x>
           <y>11</y>
           <width>511</width>
-          <height>381</height>
+          <height>361</height>
          </rect>
         </property>
        </widget>
@@ -428,7 +435,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>400</y>
+          <y>370</y>
           <width>501</width>
           <height>80</height>
          </rect>
@@ -474,7 +481,7 @@
    <property name="geometry">
     <rect>
      <x>210</x>
-     <y>520</y>
+     <y>510</y>
      <width>93</width>
      <height>28</height>
     </rect>

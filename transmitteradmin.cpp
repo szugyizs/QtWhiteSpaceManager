@@ -1,3 +1,14 @@
+/**
+ * @package QTWhiteSpaceManager
+ * @module TransmitterAdmin.cpp
+ * The source file of the class detemining the operations of the Transmitter GUI.
+ * ----------------------------
+ * Updates
+ * @date: 18/04/2019
+ * @abstract: Added comments, indented code
+ * @author:
+ */
+
 #include "transmitteradmin.h"
 #include "ui_transmitteradmin.h"
 #include "helpdialog.h"
@@ -5,6 +16,10 @@ using namespace std;
 #include <iostream>
 #include <QCheckBox>
 
+/**
+  * Constructor for a TransmitterAdmin object.
+  * @param parent: the parent of the TransmitterAdmin
+  */
 TransmitterAdmin::TransmitterAdmin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::TransmitterAdmin)
@@ -15,6 +30,9 @@ TransmitterAdmin::TransmitterAdmin(QWidget *parent) :
     cout << "Transmitter dialog object created." << endl;
 }
 
+/**
+ * Destructor for the TransmitterAdmin
+ */
 TransmitterAdmin::~TransmitterAdmin()
 {
     delete ui;
@@ -27,11 +45,23 @@ RemoveTab::RemoveTab(QWidget *parent) : QWidget(parent) { }
 ListTab::ListTab(QWidget *parent) : QWidget(parent) { }
 
 QList<QStringList> columns;
-QString helpTmitText = "Create file tab helptext.";
+QString helpTmitText = "You can import transmitters from a file. Ensure the only columns in there are X and Y coordinates, in that order. Headers are allowed.";
 
 //-------------------Create Tab----------------------
+/**
+ * The slot of the addBtnManual being clicked.
+ * It takes the Transmitter item to be added, and passes the details to the database function.
+ */
 void TransmitterAdmin::on_addBtnManual_clicked()
 {
+    //ensure that input is not empty, not a text, and is in range of +-180 degrees of Lat/Lon
+    QDoubleValidator *dValid= new QDoubleValidator(this);
+    dValid->setBottom(-180);
+    dValid->setTop(180);
+    dValid->setNotation(QDoubleValidator::StandardNotation);
+    ui->xInput->setValidator(dValid);
+    ui->yInput->setValidator(dValid);
+
     double xin = ui->xInput->text().toDouble();
     double yin = ui->yInput->text().toDouble();
     Transmitter *transmitter = new Transmitter(xin, yin);
@@ -53,6 +83,9 @@ void TransmitterAdmin::on_addBtnManual_clicked()
     }
 }
 
+/**
+ * A function to clean GUI.
+ */
 void TransmitterAdmin::on_clearBtnCreate_clicked()
 {
     ui->xInput->setText("");
@@ -61,6 +94,9 @@ void TransmitterAdmin::on_clearBtnCreate_clicked()
 }
 
 //-----------------Create Tab 2----------------------
+/**
+ * A function to read in transmitter values from a file.
+ */
 void TransmitterAdmin::on_browseFile_clicked()
 {
     columns.clear();
@@ -69,6 +105,7 @@ void TransmitterAdmin::on_browseFile_clicked()
     bool toHeader = true;
     int numOfCols = 0;
 
+    //choose file to read in from certain location and of a certain type
     QString line;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"C://","All files (*.*);;CSV Files(*.csv)");
     QFile file(fileName);
@@ -79,20 +116,23 @@ void TransmitterAdmin::on_browseFile_clicked()
         ui->tstatusLabel1->setText("Error loading file");
         return;
     }
+
+    //only csv files allowed
     QFileInfo fInfo(fileName);
     if (fInfo.completeSuffix()!="csv"){
         QMessageBox::critical(this,"Error","Unable to import file, wrong file type.");
         ui->tstatusLabel1->setText("Error loading file");
         return;
     }
+
     int i = 0;
     do{
-        if (firstCheck){
+        if (firstCheck){  //if it's the first row, separate values into a different list
             line = ipLine.readLine();
             headers << line.split(',');
             numOfCols = headers.count();
             if (numOfCols!=2){
-                QMessageBox::critical(this,"Error","Invalid number of columns ");
+                QMessageBox::critical(this,"Error","Invalid number of columns. Please restructure data to an (X,Y) format.");
                 ui->tstatusLabel1->setText("Invalid number of columns");
                 ui->fileTableWidget->clear();
                 ui->fileTableWidget->setRowCount(0);
@@ -100,7 +140,7 @@ void TransmitterAdmin::on_browseFile_clicked()
                 return;
             }
 
-            QListIterator<QString> hIt(headers);
+            QListIterator<QString> hIt(headers); //iterate through the headers list and check if they are all valid types
             while (hIt.hasNext()) {
                 QString current = hIt.next();
                 bool isNum = false;
@@ -109,26 +149,26 @@ void TransmitterAdmin::on_browseFile_clicked()
                     int temp = headers.count();
                     headers.clear();
                     for(int j=0; j<temp; j++){
-                        headers<<(QString::number(j+1));
+                        headers<<(QString::number(j+1)); //if row is values, headers replaced by index numbers
                     }
                     toHeader = false;
                 }
             }
             if (!toHeader){
-                columns<<line.split(',');
+                columns<<line.split(',');       //if there are less elements in any row, error out
                 if (columns[0].size()!=numOfCols){
                     QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
                     ui->tstatusLabel1->setText("Error loading file");
                     return;
                 }
             }
-            firstCheck = false;
+            firstCheck = false; //move onto next row in the next iteration
         }
         else{
             line = ipLine.readLine();
             if (!(line == "")){
                 columns << line.split(',');
-                if (columns[i].size()!=numOfCols){
+                if (columns[i].size()!=numOfCols){     //if there are less elements in any row, error out
                     QMessageBox::critical(this,"Error","Unable to import file, entries with empty fields.");
                     ui->tstatusLabel1->setText("Error loading file");
                     return;
@@ -138,6 +178,7 @@ void TransmitterAdmin::on_browseFile_clicked()
         }
     } while (!line.isNull());
 
+    //set tablewidget to be of the size of the data
     ui->fileTableWidget->setRowCount(columns.size());
     ui->fileTableWidget->setColumnCount(columns[0].size());
     ui->fileTableWidget->setSelectionMode(QAbstractItemView::NoSelection);
@@ -145,13 +186,16 @@ void TransmitterAdmin::on_browseFile_clicked()
 
     for (int i = 0; i<columns.size(); ++i){
         for (int j = 0; j<columns[i].size(); ++j){
-            ui->fileTableWidget->setItem(i,j,new QTableWidgetItem(columns[i][j]));
+            ui->fileTableWidget->setItem(i,j,new QTableWidgetItem(columns[i][j]));  //fill table
         }
     }
     ui->tstatusLabel1->setText("File loaded");
     ui->addAllBtn->setEnabled(true);
 }
 
+/**
+ * A function to add all of the values in the table read in from a file.
+ */
 void TransmitterAdmin::on_addAllBtn_clicked()
 {
     QVariantList xin;
@@ -163,7 +207,7 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     confirmMsg="Are the columns: X , Y; in this order?";
     if (confirmPopUp(confirmMsg)==0){
         for (int i = 0; i<columns.size(); ++i){
-            for (int j = 0; j<columns[i].size(); ++j){
+            for (int j = 0; j<columns[i].size(); ++j){ //read in items one by one
                 switch(j) {
                 case 0 :
                     xin<<(columns[i][j]);
@@ -221,16 +265,22 @@ void TransmitterAdmin::on_addAllBtn_clicked()
     }
 }
 
+/**
+ * A function to check which tab is selected.
+ */
 void TransmitterAdmin::on_toolBox_currentChanged(int index)
 {
-    if (index==0){ helpTmitText = "Create file page helptext";}
-    else{ helpTmitText = "Create manual helptext";}
+    if (index==0){ helpTmitText = "You can import transmitters from a file. Ensure the only columns in there are X and Y coordinates, in that order. Headers are allowed.";}
+    else{ helpTmitText = "If no transmitters are in interference range, you will be allowed to install a transmitter.";}
     foreach(QLineEdit* lineEd, findChildren<QLineEdit*>()) { lineEd->clear(); }
     ui->fileTableWidget->clear();
     ui->tstatusLabel1->setText("");
     ui->tstatusLabel2->setText("");
 }
 
+/**
+ * A function to clear all interface output items.
+ */
 void TransmitterAdmin::on_clearFileBtn_clicked() {
     ui->fileTableWidget->clear();
     ui->fileTableWidget->setRowCount(0);
@@ -239,12 +289,26 @@ void TransmitterAdmin::on_clearFileBtn_clicked() {
 }
 
 //-------------------Modify Tab----------------------
+/**
+ * A function to edit the X and Y coordinates of a User device.
+ * Location change may result in change in power.
+ */
 void TransmitterAdmin::on_ModifyBtn_clicked()
 {
     Database connection;
     QString id = ui->tmitDropDown->currentText();
+
+    QDoubleValidator *dValid= new QDoubleValidator(this);
+    dValid->setBottom(-180.00000);
+    dValid->setDecimals(5);
+    dValid->setTop(180.00000);
+    dValid->setNotation(QDoubleValidator::StandardNotation);
+    ui->xInputModify->setValidator(dValid);
+    ui->yInputModify->setValidator(dValid);
+
     double xin = ui->xInputModify->text().toDouble();
     double yin = ui->yInputModify->text().toDouble();
+
     Transmitter *transmitter = new Transmitter(xin, yin, id);
 
     QVariantList addCheck = connection.addModifiedItem(transmitter);
@@ -263,6 +327,10 @@ void TransmitterAdmin::on_ModifyBtn_clicked()
     }
 }
 
+/**
+ * A function to update the X and Y inputs to the current X and Y values of the
+ * device selected in the dropdown list.
+ */
 void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
 {
     ui->tstatusLabel3->setText("");
@@ -282,18 +350,23 @@ void TransmitterAdmin::on_tmitDropDown_currentIndexChanged(const QString &arg1)
 
 }
 
+/**
+ * A function to check which administrative tab is selected.
+ * Updates/clears GUI elements according to the purpose of the tab.
+ * @param index: the index of the tab
+ */
 void TransmitterAdmin::on_tabWidget_currentChanged(int index)
 {
     Database connection;
     QSqlQueryModel *model = new QSqlQueryModel();
     if(index==1){
-        helpTmitText = "Modify page helptext";
+        helpTmitText = "You can change the location of a transmitter by inputting the coordinates.";
         model->setQuery(connection.getIDs("T"));
         ui->tmitDropDown->setModel(model);
         ui->tstatusLabel3->setText("");
     }
     if(index==2){
-        helpTmitText = "Remove page helptext";
+        helpTmitText = "You can remove any number of records by clicking on them in the table and clicking remove. Selections can be cleared with clicking again on the selection.";
         model->setQuery(connection.getAllOfType("T"));
         model->setHeaderData(0, Qt::Horizontal, tr("Select"));
         ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -303,7 +376,7 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
         ui->tstatusLabel5->setText("");
     }
     if(index==3){
-        helpTmitText = "List page helptext";
+        helpTmitText = "You can view all devices of this type here. To export it to a CSV file, please hit Export.";
         model->setQuery(connection.getAllOfType("T"));
         ui->ListTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->ListTableView->setModel(model);
@@ -312,6 +385,9 @@ void TransmitterAdmin::on_tabWidget_currentChanged(int index)
     }
 }
 
+/**
+ * A function to export the transmitter list to a file.
+ */
 void TransmitterAdmin::on_tExportBtn_clicked()
 {
     QString outdata;
@@ -320,12 +396,15 @@ void TransmitterAdmin::on_tExportBtn_clicked()
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
+            //get each table element, and concatinate them with a ,
             outdata += ui->ListTableView->model()->data(ui->ListTableView->model()->index(i,j)).toString();
+            //do not add a comma at the end of the line, as the map won't be able to read it
             if (j!=columns-1){outdata += ", ";}
         }
         outdata += "\n";
     }
 
+    //choose a location, a filename and an extension to export to
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save WSDB To File"), "C://","CSV Files(*.csv);;All files (*.*)");
     QFile file(fileName);
     if(file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -342,12 +421,15 @@ void TransmitterAdmin::on_tExportBtn_clicked()
     }
 }
 
+/**
+ * A function to remove selected elements from the database.
+ */
 void TransmitterAdmin::on_removeBtn_clicked()
 {
     if(ui->ListTableView_2->selectionModel()->hasSelection()){
         QModelIndexList selected = ui->ListTableView_2->selectionModel()->selectedRows();
         QStringList selectedRows;
-        for(int i=0; i< selected.count(); i++) {
+        for(int i=0; i< selected.count(); i++) { //get all the records selected
             QModelIndex index = selected.at(i);
             selectedRows << ui->ListTableView_2->model()->data(index).toString();
         }
@@ -360,19 +442,25 @@ void TransmitterAdmin::on_removeBtn_clicked()
             QMessageBox::information(this,"Success","Successfully removed records from database");
             ui->tstatusLabel5->setText("Successfully removed ");
             QSqlQueryModel *model = new QSqlQueryModel();
-            model->setQuery(connection.getAllOfType("T"));
+            model->setQuery(connection.getAllOfType("T"));      //refresh table view
             ui->ListTableView_2->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
             ui->ListTableView_2->setModel(model);
         }
     }
 }
 
+/**
+ * A function to clear all selections in the remove table.
+ */
 void TransmitterAdmin::on_clrSelectBtn_clicked()
 {
     ui->ListTableView_2->clearSelection();
     ui->tstatusLabel5->setText("");
 }
 
+/**
+ * A function to set the dialog text of help.
+ */
 void TransmitterAdmin::on_helpBtn_clicked()
 {
     HelpDialog helpPopUp;
@@ -381,6 +469,11 @@ void TransmitterAdmin::on_helpBtn_clicked()
     helpPopUp.exec();
 }
 
+/**
+ * The popup box creating the help dialog.
+ * @param values: the text to be shown in the popup
+ * @return if agreed or not
+ */
 int TransmitterAdmin::confirmPopUp(QString values) {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirm column setup", values, QMessageBox::Yes|QMessageBox::No);
